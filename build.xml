@@ -1,0 +1,62 @@
+<project name='sbfit' default='jar' basedir='.'>
+
+	<exec executable="sb-config">
+		<arg value="--env"/>
+		<redirector outputproperty="streambase.home">
+			<outputfilterchain>
+				<linecontains>
+					<contains value="STREAMBASE_HOME="/>
+				</linecontains>
+				<tokenfilter>
+				    <stringtokenizer delims=""/>
+				    <replaceregex pattern="^.*STREAMBASE_HOME=&quot;(.*)&quot;.*" replace="\1"/>
+				</tokenfilter>
+			</outputfilterchain>
+		</redirector>
+	</exec>
+
+	<echo message="StreamBase home is ${streambase.home}"/>
+
+	<!-- Classpath for building the JAR -->
+	<path id='class.path'>
+		<fileset dir='lib' includes='**/*.jar'/>
+		<fileset dir='${streambase.home}' includes='**/*.jar'/>		
+	</path>
+
+	<!-- Build the FIT server -->
+	<target name='jar'>
+        <mkdir dir='build'/>
+		<javac target='1.6' srcdir='java-src' destdir='build' debug='on' classpathref='class.path' />
+		<jar destfile='lib/sbfit.jar' basedir='build/' >
+            <include name='**/*.class'/>
+        </jar>
+	</target>
+	
+	<!-- Start the FIT server -->
+	<target name="start-fit-server">
+		<start-fit-server/>
+	</target>
+
+	<!-- Macro to start the FIT server -->
+	<macrodef name="start-fit-server">
+		<attribute name="config"      default="sbd.sbconf"/>
+		<attribute name="port"        default="8080"/>
+		<attribute name="logs"        default="logs"/>
+		<attribute name="daysHistory" default="0"/>
+		<sequential>
+			<echo message="Starting FIT server (config @{config})"/>
+			<java classpath="lib/fitnesse.jar" classname="fitnesse.FitNesse" fork="true">
+				<arg value="-p"/>
+				<arg value="@{port}"/>
+				<arg value="-e"/>
+				<arg value="@{daysHistory}"/>
+				<arg value="-l"/>
+				<arg value="@{logs}"/>
+				<env key="STREAMBASE_DEBUG" value="1"/>                    <!-- debug on/off -->
+				<env key="STREAMBASE_HOME" value="${streambase.home}"/>    <!-- StreamBase home directory -->
+				<env key="STREAMBASE_CONFIG" value="@{config}"/>           <!-- Configuration file -->
+			</java>
+		</sequential>
+	</macrodef>
+
+</project>

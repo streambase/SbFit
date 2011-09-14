@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<modify version="6.6.2.0">
+    <add generator="gui">
+        <schema name="schema:TestInput">
+            <field description="" name="a" type="int"/>
+            <field description="" name="b" type="int"/>
+            <field description="" name="c" type="int"/>
+        </schema>
+        <stream name="TestInput" schema="schema:TestInput">
+            <param name="gui:x" value="373.0"/>
+            <param name="gui:y" value="127.0"/>
+            <param name="gui:width" value="70.0"/>
+            <param name="gui:height" value="50.0"/>
+        </stream>
+        <box name="Map1" type="map">
+            <input port="1" stream="TestInput"/>
+            <output port="1" stream="out:Map1_1"/>
+            <multiplicity type="single"/>
+            <target-list>
+                <item name="input" prefix="" selection="all" suffix=""/>
+                <expressions>
+                    <include field="sum">a+b+c</include>
+                </expressions>
+            </target-list>
+            <param name="gui:bends:1" value=""/>
+            <param name="gui:x" value="533.0"/>
+            <param name="gui:y" value="112.0"/>
+            <param name="gui:width" value="70.0"/>
+            <param name="gui:height" value="70.0"/>
+        </box>
+        <box name="Filter1" type="filter">
+            <input port="1" stream="out:Map1_1"/>
+            <output port="1" stream="TestOutput"/>
+            <param name="autogen-nomatch-port" value="false"/>
+            <param name="expression.0" value="sum&gt;3"/>
+            <multiplicity type="single"/>
+            <param name="gui:bends:1" value=""/>
+            <param name="gui:x" value="638.0"/>
+            <param name="gui:y" value="112.0"/>
+            <param name="gui:width" value="70.0"/>
+            <param name="gui:height" value="70.0"/>
+            <param name="gui:columnwidths" value="475,316"/>
+        </box>
+        <output-stream name="TestOutput">
+            <param name="gui:bends" value=""/>
+            <param name="gui:x" value="795.0"/>
+            <param name="gui:y" value="126.0"/>
+            <param name="gui:width" value="70.0"/>
+            <param name="gui:height" value="50.0"/>
+        </output-stream>
+    </add>
+</modify>

@@ -1,0 +1,11 @@
+!contents
+
+My new pricing test...
+
+!|Enqueue|mytest|TestInput|
+|a|b|c|
+|1|2|3|
+
+!|Dequeue|mytest|TestOutput|
+|sum|
+|6|

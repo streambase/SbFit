@@ -1,0 +1,7 @@
+
+
+
+!path lib/*.jar
+!path ${STREAMBASE_HOME}/lib/*.jar
+!path ${STREAMBASE_HOME}/lib/adapter/*.jar
+!path ${STREAMBASE_HOME}/lib/ext/*.jar
