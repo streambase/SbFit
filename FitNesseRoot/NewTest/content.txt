@@ -1,9 +1,0 @@
-
-This is a suite of tests. All of the tests share the same SetUp and TearDown. The SetUp instantiates a module in the default container in a server. The TearDown stops that server. Servers are re-used if they are using the same module -- this is important! So multiple tests against the same module work fast.
-
-Common setup (configuration etc) can be done in the SetUp as well.
-
-Enqueue and Dequeue Fixtures are demonstrated.
-
-!contents -R2 -g -p -f -h
-
