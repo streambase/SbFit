@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<testResults>
+  <FitNesseVersion>v20101101</FitNesseVersion>
+  <rootPath>ExampleTest</rootPath>
+    <result>
+    <counts>
+      <right>0</right>
+      <wrong>0</wrong>
+      <ignores>13</ignores>
+      <exceptions>0</exceptions>
+    </counts>
+    <runTimeInMillis>10143</runTimeInMillis>
+    <content><![CDATA[<br/><div class="setup">
+	<div style="float: right;" class="meta"><a href="javascript:expandAll();">Expand All</a> | <a href="javascript:collapseAll();">Collapse All</a></div>
+	<a href="javascript:toggleCollapsable('-2475908210542153825');">
+		<img src="/files/images/collapsableClosed.gif" class="left" id="img-2475908210542153825"/>
+	</a>
+&nbsp;<span class="meta">Set Up: <a href="FrontPage.ProjectTestRoot.SetUp">.FrontPage.ProjectTestRoot.SetUp</a> <a href="FrontPage.ProjectTestRoot.SetUp?edit&amp;redirectToReferer=true&amp;redirectAction=">(edit)</a></span>
+	<div class="hidden" id="-2475908210542153825"><div class="toc1">
+	<div class="contents">
+		<b>Contents:</b>
+		<ul/>
+	</div>
+</div>
+<br/><br/><table border="1" cellspacing="0">
+<tr><td>Import</td>
+</tr>
+<tr><td>com.streambase.sb.sbfit.fixtures</td>
+</tr>
+</table>
+<br/><table border="1" cellspacing="0">
+<tr><td>SbdStart</td>
+<td>mytest</td>
+<td>SbFit.sbapp</td>
+</tr>
+</table>
+<br/></div>
+</div>
+<div class="toc1">
+	<div class="contents">
+		<b>Contents:</b>
+		<ul/>
+	</div>
+</div>
+<br/><br/>This is a specific sbfit test<br/><br/><table border="1" cellspacing="0">
+<tr><td>Import</td>
+</tr>
+<tr><td>com.streambase.sb.sbfit.fixtures</td>
+</tr>
+</table>
+<br/><table border="1" cellspacing="0">
+<tr><td>Enqueue</td>
+<td>mytest</td>
+<td>in</td>
+</tr>
+<tr><td colspan="3">value</td>
+</tr>
+<tr><td colspan="3">2</td>
+</tr>
+<tr><td colspan="3">4</td>
+</tr>
+<tr><td colspan="3">5</td>
+</tr>
+</table>
+<br/><table border="1" cellspacing="0">
+<tr><td>!</td>
+<td>Dequeue</td>
+<td>mytest</td>
+<td>out</td>
+<td>&nbsp;</td>
+</tr>
+<tr><td class="ignore">value</td>
+<td class="ignore">name</td>
+<td class="ignore">pi</td>
+<td colspan="2" class="ignore">&nbsp;</td>
+</tr>
+<tr><td class="ignore">2</td>
+<td class="ignore">Irving</td>
+<td colspan="3" class="ignore">3.14159</td>
+</tr>
+<tr><td class="ignore">4</td>
+<td class="ignore">Irving</td>
+<td colspan="3" class="ignore">3.14159</td>
+</tr>
+<tr><td class="ignore">5</td>
+<td class="ignore">Irving</td>
+<td colspan="3" class="ignore">3.14159</td>
+</tr>
+</table>
+<br/><div class="teardown">
+	<div style="float: right;" class="meta"><a href="javascript:expandAll();">Expand All</a> | <a href="javascript:collapseAll();">Collapse All</a></div>
+	<a href="javascript:toggleCollapsable('2621334161506009209');">
+		<img src="/files/images/collapsableClosed.gif" class="left" id="img2621334161506009209"/>
+	</a>
+&nbsp;<span class="meta">Tear Down: <a href="FrontPage.ProjectTestRoot.TearDown">.FrontPage.ProjectTestRoot.TearDown</a> <a href="FrontPage.ProjectTestRoot.TearDown?edit&amp;redirectToReferer=true&amp;redirectAction=">(edit)</a></span>
+	<div class="hidden" id="2621334161506009209"><div class="toc1">
+	<div class="contents">
+		<b>Contents:</b>
+		<ul/>
+	</div>
+</div>
+<br/><br/><table border="1" cellspacing="0">
+<tr><td>SbdStop</td>
+<td>mytest</td>
+</tr>
+</table>
+</div>
+</div>
+]]></content>
+    <relativePageName>ExampleTest</relativePageName>
+    
+    
+    
+  </result>
+  
+    <finalCounts>
+    <right>0</right>
+    <wrong>0</wrong>
+    <ignores>0</ignores>
+    <exceptions>0</exceptions>
+  </finalCounts>
+  <totalRunTimeInMillis>0</totalRunTimeInMillis>
+  
+</testResults>
+
