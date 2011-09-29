@@ -1,0 +1,21 @@
+!contents -R2 -g -p -f -h
+
+This is a sbfit test suite
+
+|Import|
+|com.streambase.sb.sbfit.fixtures|
+
+!path java-bin
+
+Use my development sbunit classes
+
+!path /Users/haydens/work/svn/ruggles/sb-test-api/bin
+
+!path *.jar
+!path ${STREAMBASE_HOME}/lib/*.jar
+!path ${STREAMBASE_HOME}/lib/adapter/*.jar
+!path ${STREAMBASE_HOME}/lib/ext/*.jar
+
+!define COMMAND_PATTERN {java -Dlogback.configurationFile=sbfit-process-logback.xml -Duser.timezone=UTC -Xms1024m -Xmx1024m -cp %p %m }
+
+!define timeout (3000)

@@ -4,30 +4,40 @@
  */
 package com.streambase.sb.sbfit.fixtures;
 
-import com.streambase.sb.sbfit.common.util.DebugLogging;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.streambase.sb.sbfit.common.util.LogOutputCapture;
+
 import fit.Parse;
 import fitlibrary.SequenceFixture;
 
 public class SbdStop extends SequenceFixture {
-	private SbWithFixture with = null;
+    private static final Logger logger = LoggerFactory.getLogger(SbdStop.class);
 
-	public SbdStop() {
-		with = new SbWithFixture(this, SbFixtureType.SbdStart);
-	}
+    private SbWithFixture with = null;
 
-	public void doTable(Parse rows) {
-		if (args.length != 1) {
-			DebugLogging.getLogger().debugLog( "SbdStop requires one argument" );
-			exception(rows, new IllegalArgumentException(
-					"Usage: arg0: <alias>"));
-		}
+    public SbdStop() {
+        with = new SbWithFixture(this, SbFixtureType.SbdStart);
+    }
 
-		try {
-			DebugLogging.getLogger().debugLog( "Running sbd stop " + args[0] );
-			with.stopSbd(args[0]);
-		} catch (Exception e) {
-			DebugLogging.getLogger().debugLog( "Runtime exception: " + e.toString() );
-			throw new RuntimeException(e);
-		}
-	}
+    public void doTable(Parse rows) {
+        if (args.length != 1) {
+            logger.info("SbdStop requires one argument");
+            exception(rows,
+                    new IllegalArgumentException("Usage: arg0: <alias>"));
+        }
+
+        try {
+            with.start();
+            logger.info("Running sbd stop {}", args[0]);
+            with.stopSbd(args[0]);
+            LogOutputCapture.getCapturer().reset();
+        } catch (Exception e) {
+            logger.info("Runtime exception stopping", e);
+            throw new RuntimeException(e);
+        } finally {
+            with.stop();
+        }
+    }
 }

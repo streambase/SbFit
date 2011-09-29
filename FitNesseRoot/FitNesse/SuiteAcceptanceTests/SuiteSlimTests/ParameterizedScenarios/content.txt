@@ -1,7 +1,7 @@
 ![:
 scenario:login user _ with password _:user name, password:
 check:echo:@userName:Bob
-check:echo:@password:xyzzy
+check:echo:@password:xyzzy 
 ]!
 
 ![ script

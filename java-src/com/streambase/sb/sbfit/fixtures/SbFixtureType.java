@@ -11,7 +11,9 @@ public enum SbFixtureType {
 	Blast,
 	Enqueue,
     Dequeue,
+    UnorderedDequeue,
     BlockingDequeue,
     DefineVariable,
-    UpdateVariable 
+    UpdateVariable,
+    BlockingDequeueVariableWithDrain
 }

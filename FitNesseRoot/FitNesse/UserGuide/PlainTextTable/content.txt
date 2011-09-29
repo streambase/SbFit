@@ -1,4 +1,4 @@
-Tables can be created very easily from plain text.
+Tables can be created very easily from plain text.  
 
 '''Markup Text'''
 {{{![
@@ -28,7 +28,7 @@ Address:Here
 Street:Cranbrook:Zip:60048
 ]!
 ----
-If you want to hide the first row of the table, you can put it right after the delimiter following a space.  The first row is still there, it's just hidden.
+If you want to hide the first row of the table, you can put it right after the delimiter following a space.  The first row is still there, it's just hidden.  
 {{{![: Location
 Name:Bob
 Address:Here

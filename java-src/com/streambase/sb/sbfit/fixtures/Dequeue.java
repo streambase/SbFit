@@ -1,34 +1,35 @@
-/*
- * Copyright (c) 2004-2008 StreamBase Systems, Inc. All rights reserved.
- * 
- */
 package com.streambase.sb.sbfit.fixtures;
 
-import com.streambase.sb.sbfit.common.util.DebugLogging;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import fit.ColumnFixture;
 import fit.Parse;
 
 public class Dequeue extends ColumnFixture {
-	private SbWithFixture with = null;
-	
-	public Dequeue() {
-		with = new SbWithFixture(this,SbFixtureType.Dequeue);
+    private static final Logger logger = LoggerFactory.getLogger(Dequeue.class);
+
+    private SbWithFixture with = null;
+
+    public Dequeue() {
+        with = new SbWithFixture(this, SbFixtureType.Dequeue);
     }
 
-	public void doRows(Parse rows) {
+    public void doRows(Parse rows) {
         try {
-            rows = with.doArgs(rows,args);
-            
+            with.start();
+            rows = with.doDequeueArgs(rows, args);
             if (rows == null) {
-            	return;
+                return;
             }
-            
- 			with.initBindings(rows.parts);			
-
-			with.dequeue(rows);
-        } catch (Throwable e){
-			DebugLogging.getLogger().debugLog( "Dequeue exception: " + e );
-        	exception(rows.parts,e);
+            with.initBindings(rows.parts);
+            with.newDequeue(rows);
+        } catch (Throwable e) {
+            logger.error("Dequeue", e);
+            exception(rows.parts, e);
+        } finally {
+            with.stop();
         }
-      }
+
+    }
 }

@@ -61,6 +61,7 @@ public final class SbTypeAdapter extends TypeAdapter {
 		@Override
 		public Object parse(String s) throws Exception {
 			if ( schema.getField(name).getDataType() == DataType.TUPLE ) {
+				if (s==null || s.equals("null")) return null;
 				return com.streambase.sb.unittest.CSVTupleMaker.MAKER.createTuple( schema.getField(name).getSchema(), s );
 			}
 			else {
@@ -87,13 +88,43 @@ public final class SbTypeAdapter extends TypeAdapter {
             
             try
             {
-                DataType eleDataType = elementType.getDataType();
-                List<Object> list = new ArrayList<Object>();
                 
                 String[] valueList = s.split(",");
-                if(eleDataType == DataType.TUPLE)
+                
+                // Get element type (I think this will always be a list)
+                DataType eleDataType = elementType.getDataType();
+
+                // Get the sub types
+                CompleteDataType itemCompleteDataType = elementType.getElementType();
+                DataType itemDataType = null;
+                
+                if (itemCompleteDataType != null) {
+                	itemDataType = itemCompleteDataType.getDataType();
+                }
+                else
                 {
-                    Schema schema = elementType.getSchema();
+                	itemDataType = eleDataType;
+                }
+                
+                List<Object> list = new ArrayList<Object>();
+                Schema schema = null;
+                boolean treatAsTupleList = false;
+                
+                if (eleDataType == DataType.LIST && itemDataType == DataType.TUPLE)
+                {
+                	// I am a list of tuples
+                    schema = itemCompleteDataType.getSchema();
+                    treatAsTupleList = true;
+                }
+                else if (eleDataType == DataType.TUPLE)
+                {
+                	// I am a tuple type
+                    schema = elementType.getSchema();
+                    treatAsTupleList = true;
+                }
+                
+                if(treatAsTupleList)
+                {
                     
                     int row = 0;
                     int fieldCount = schema.getFieldCount();                    
@@ -108,7 +139,6 @@ public final class SbTypeAdapter extends TypeAdapter {
                             tuple.setField(i, convert(schema.getField(i).getDataType(), valueList[index]));
                         }
                         row++;                        
-                          
                         list.add(tuple);
                     }
                 }
@@ -116,7 +146,7 @@ public final class SbTypeAdapter extends TypeAdapter {
                 {
                     for(int i=0; i<valueList.length; i++)
                     {                        
-                        list.add(convert(eleDataType, valueList[i]));
+                        list.add(convert(itemDataType, valueList[i]));
                     }
                 }                
                 return Collections.unmodifiableList(list);
@@ -143,9 +173,38 @@ public final class SbTypeAdapter extends TypeAdapter {
                 
                 expectedValue = expectedValue.substring(1, expectedValue.length()-1);
                 String[] valueList = expectedValue.split(",");
-                if(eleDataType == DataType.TUPLE)
+                
+                // Get the sub types
+                CompleteDataType itemCompleteDataType = elementType.getElementType();
+                DataType itemDataType = null;
+                
+                if (itemCompleteDataType != null) {
+                	itemDataType = itemCompleteDataType.getDataType();
+                }
+                else
                 {
-                    Schema schema = elementType.getSchema();
+                	itemDataType = eleDataType;
+                }
+
+                Schema schema = null;
+                boolean treatAsTupleList = false;
+                
+                if (eleDataType == DataType.LIST && itemDataType == DataType.TUPLE)
+                {
+                	// I am a list of tuples
+                    schema = itemCompleteDataType.getSchema();
+                    treatAsTupleList = true;
+                }
+                else if (eleDataType == DataType.TUPLE)
+                {
+                	// I am a tuple type
+                    schema = elementType.getSchema();
+                    treatAsTupleList = true;
+                }
+                
+                
+                if(treatAsTupleList)
+                {
                     
                     int row = 0;
                     int fieldCount = schema.getFieldCount();                    
@@ -177,8 +236,8 @@ public final class SbTypeAdapter extends TypeAdapter {
                 {
                     for(int i=0; i<valueList.length; i++)
                     {          
-                        Object actualFieldValue = ((List)actualValue).get(i);
-                        Object expectedFieldValue = convert(eleDataType, valueList[i]);
+                        Object actualFieldValue = ((List<?>)actualValue).get(i);
+                        Object expectedFieldValue = convert(itemDataType, valueList[i]);
                         if(!actualFieldValue.equals(expectedFieldValue)){
                             return false;
                         }

@@ -1,0 +1,7 @@
+!contents
+
+|Import|
+|com.streambase.sb.sbfit.fixtures|
+
+!|SbdStart|mytest|SbFit.sbapp|
+

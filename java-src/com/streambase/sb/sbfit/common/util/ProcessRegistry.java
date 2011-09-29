@@ -7,28 +7,34 @@ package com.streambase.sb.sbfit.common.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.streambase.sb.unittest.internal.embedded.EmbeddedServerManager;
+import com.streambase.sb.unittest.SBServerManager;
 
 public class ProcessRegistry {
-	private static Map<String, EmbeddedServerManager> processMap = new HashMap<String, EmbeddedServerManager>();
+	private static Map<String, SBServerManager> processMap = new HashMap<String, SBServerManager>();
 	
 	private ProcessRegistry() { }
 	
-	public static void register(String alias, EmbeddedServerManager bpi) {
+	public static void register(String alias, SBServerManager bpi) {
 		synchronized(processMap) {
 			processMap.put(alias, bpi);
 		}
 	}
 	
-	public static EmbeddedServerManager get(String alias) {
+	public static SBServerManager get(String alias) {
 		synchronized(processMap) {
 			return processMap.get(alias);
 		}
 	}
 	
-	public static EmbeddedServerManager remove(String alias) {
+	public static SBServerManager remove(String alias) {
 		synchronized(processMap) {
 			return processMap.remove(alias);
+		}
+	}
+	
+	public static boolean contains(String alias) {
+		synchronized(processMap) {
+			return processMap.containsKey(alias);
 		}
 	}
 }

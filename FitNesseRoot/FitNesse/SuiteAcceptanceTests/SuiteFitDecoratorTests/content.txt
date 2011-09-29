@@ -12,6 +12,6 @@ List of available decorators and their functionality with an example:
  * [[Increment all the subsequent column values using the !-IncrementColumnsValues-! decorator][^IncrementColumnsValues]]
  * [[Example of piping !-CopyAndAppendLastRow-! and !-IncrementColumnsValues-! decorators][^CopyAppendLastRowAndIncrementColumnValues]]
 
-'''Note:''' !-FitDecorator-! does not support [[Fit Library][http://fitlibrary.sourceforge.net]] as of now.
+'''Note:''' !-FitDecorator-! does not support [[Fit Library][http://fitlibrary.sourceforge.net]] as of now. 
 
 !contents

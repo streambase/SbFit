@@ -9,24 +9,27 @@ import fit.exception.FitParseException;
 import fitlibrary.SequenceFixture;
 
 public class SendAndStartListening extends SequenceFixture {
-	private SbWithFixture with = null;
-	
-	public SendAndStartListening() {
-		with = new SbWithFixture(this,SbFixtureType.Blast);
+    private SbWithFixture with = null;
+
+    public SendAndStartListening() {
+        with = new SbWithFixture(this, SbFixtureType.Blast);
     }
 
-	public void doTable(Parse rows)  {
+    public void doTable(Parse rows) {
         try {
-        	if (args.length != 1) {
-        		exception(rows, new IllegalArgumentException());
-        	}
-        	
-        	with.doArgs(rows,args);
-        } catch (Throwable e){
-        	e.printStackTrace();
-        	try {
-				exception(new Parse("foo"),e);
-			} catch (FitParseException ignoreAndContinue) { }
+            with.start();
+            if (args.length != 1) {
+                exception(rows, new IllegalArgumentException());
+            }
+
+            with.doArgs(rows, args);
+        } catch (Throwable e) {
+            try {
+                exception(new Parse("foo"), e);
+            } catch (FitParseException ignoreAndContinue) {
+            }
+        } finally {
+            with.stop();
         }
-      }
+    }
 }

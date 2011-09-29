@@ -19,7 +19,7 @@ You can match regular expressions by using the syntax =~/''regex''/.  For exampl
 |check|echo|Bob|=~/Bob/|
 |check|echo|My name is Bob."|=~/B.b/|
 
-The regular expression syntax is the '''Java''' standard.
+The regular expression syntax is the '''Java''' standard.  
 
 
 

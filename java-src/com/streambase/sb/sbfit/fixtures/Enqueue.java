@@ -4,31 +4,39 @@
  */
 package com.streambase.sb.sbfit.fixtures;
 
-import com.streambase.sb.sbfit.common.util.DebugLogging;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import fit.ColumnFixture;
 import fit.Parse;
 
 public class Enqueue extends ColumnFixture {
-	private SbWithFixture with = null;
-	
-	public Enqueue() {
-		with = new SbWithFixture(this,SbFixtureType.Enqueue);
+    private static final Logger logger = LoggerFactory.getLogger(Enqueue.class);
+
+    private SbWithFixture with = null;
+
+    public Enqueue() {
+        with = new SbWithFixture(this, SbFixtureType.Enqueue);
     }
 
-	public void doRows(Parse rows) {
+    public void doRows(Parse rows) {
         try {
+            with.start();
             rows = with.doArgs(rows, args);
 
             if (rows == null) {
-            	return;
+                return;
             }
 
-            with.initBindings(rows.parts);			
+            with.initBindings(rows.parts);
 
-			with.enqueue(rows);
-        } catch (Throwable e){
-			DebugLogging.getLogger().debugLog( "Enqueue exception: " + e );
-        	exception(rows.parts,e);
+            with.enqueue(rows);
+
+        } catch (Throwable e) {
+            logger.info("Enqueue", e);
+            exception(rows.parts, e);
+        } finally {
+            with.stop();
         }
-      }
+    }
 }

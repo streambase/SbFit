@@ -1,7 +1,7 @@
 !2 Defining and Expressing Variables.
 You can define a variable to represent any amount of text.  The text in a variable is never interpreted as wiki markup.  It is always raw literal text.
  * Variable names may contain letters, numbers, and periods; e.g., MYTEST.someVar or user.name
- * You can define a variable in any of these three ways:
+ * You can define a variable in any of these three ways: 
   * !style_code(!-!define var {text}-!)
   * !style_code[!-!define var (text)-!]
   * !style_code(!-!define var [text]-!)

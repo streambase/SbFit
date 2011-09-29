@@ -12,6 +12,5 @@ public interface SbFixtureMixin {
 	public Parse doArgs(Parse rows, String... args) throws StreamBaseException;
 	public void initBindings(Parse headerCells) throws StreamBaseException;
 	public void wrong(Parse cells);
-	public void dequeue(Parse rows) throws Throwable;
 	public void enqueueRow(Parse row) throws Throwable;
 }

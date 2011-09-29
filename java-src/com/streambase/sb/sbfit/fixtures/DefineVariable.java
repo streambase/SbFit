@@ -4,27 +4,23 @@
  */
 package com.streambase.sb.sbfit.fixtures;
 
-import fit.ColumnFixture;
-import fit.Parse;
+import com.streambase.sb.StreamBaseException;
+import com.streambase.sb.sbfit.common.SbConversation;
 
-public class DefineVariable extends ColumnFixture {
-	private SbWithFixture with = null;
-	
-	public DefineVariable() {
-		with = new SbWithFixture(this,SbFixtureType.DefineVariable);
-    }
+import fitlibrary.DoFixture;
 
-	public void doRows(Parse rows) {
-        try {
-            rows = with.doArgs(rows,args);
-            
-            if (rows == null) {
-            	return;
-            }
-            
- 			with.defineVariable(rows);
-        } catch (Throwable e){
-        	exception(rows.parts,e);
-        }
-      }
+public class DefineVariable extends DoFixture {
+	public void defineVarInAs(String varName, String sbdAlias, String expression) throws StreamBaseException
+	{
+		SbConversation conversation = SbClientFactory.getByAlias(sbdAlias);
+		
+		conversation.defineVariable(varName,expression);
+	}
+	public void defineVarInUsingVarIn(String varName1, String sbdAlias1, String varName2, String sbdAlias2) throws StreamBaseException
+	{
+		SbConversation conversation1 = SbClientFactory.getByAlias(sbdAlias1);
+		SbConversation conversation2 = SbClientFactory.getByAlias(sbdAlias2);
+		
+		conversation1.defineVariable(varName1,conversation2.getVariableValue(varName2));
+	}
 }

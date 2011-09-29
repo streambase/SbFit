@@ -12,7 +12,7 @@ import fitnesse.slim.SystemUnderTest;
  * The slim fixture.
  */
 public class SlimDriver {
-
+  
   // field MUST be declared PUBLIC
   @SystemUnderTest
   public Service service = new Service();
@@ -35,7 +35,7 @@ public class Service {
   public boolean exists(String name) {
     return Database.get(name) != null;
   }
-
+ 
 }
 
 }}}

@@ -4,22 +4,32 @@ package com.streambase.sb.sbfit.common;
  * 
  */
 
- 
-
+import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.streambase.sb.sbfit.common.util.ProcessRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.streambase.sb.Schema;
 import com.streambase.sb.StreamBaseException;
 import com.streambase.sb.Tuple;
-import com.streambase.sb.containers.ContainerManager;
-import com.streambase.sb.unittest.internal.embedded.EmbeddedServerManager;
+import com.streambase.sb.client.StreamBaseClient;
+import com.streambase.sb.sbfit.common.util.ProcessRegistry;
+import com.streambase.sb.sbfit.fixtures.Dequeue;
+import com.streambase.sb.unittest.Enqueuer;
+import com.streambase.sb.unittest.SBServerManager;
 
 public class SbConversation {
+    private static final Logger logger = LoggerFactory.getLogger(Dequeue.class);
+	private static StreamBaseClient sbc;
+	private final String alias;
+	private final List<FqTuple> tbe = new LinkedList<FqTuple>();
+    private Map<String, String> variableMap = new HashMap<String, String>();
+        
 	public static class FqTuple {
 		public String streamName;
 		public Tuple tuple;
@@ -28,16 +38,31 @@ public class SbConversation {
 			this.tuple = tuple;
 		}
 	}
+	
+	public static StreamBaseClient getLiveClient() throws StreamBaseException {
+		if ( sbc != null )
+			return sbc;
+		
+		String config = System.getenv( "STREAMBASE_URI" );
+		if ( config != null && config.startsWith( "sb://" ) ) {
+			sbc = new StreamBaseClient( config );
+			return sbc;
+		}
+		
+		return null;
+	}
+	
+	public static boolean isTestMode() throws StreamBaseException {
+		return ( getLiveClient() == null );
+	}
 
-	private final String alias;
-	private final List<FqTuple> tbe = new LinkedList<FqTuple>();
-    private static Map<String, String> variableMap = new HashMap<String, String>();
-    
-    private final EmbeddedServerManager sbd;
-    
 	public SbConversation(String alias) throws StreamBaseException {
 		this.alias = alias;
-		sbd = ProcessRegistry.get(alias);
+	}
+	
+	private SBServerManager getSbd()
+	{
+		return ProcessRegistry.get(alias);
 	}
 	
 	public String getAlias() {
@@ -49,35 +74,28 @@ public class SbConversation {
 	}
 	
 	public void shuwdownContainer(String containerName) throws StreamBaseException {
-        ContainerManager containerManager = sbd.getContainerManager();
-        containerManager.getContainer(containerName).stop();
+		getSbd().stopContainers();
 	}
 	
 	public void addContainer(String containerName, String file) throws StreamBaseException {   
-		sbd.loadApp(file, containerName);
+		getSbd().loadApp(file, containerName);
 	}
 	
-	public void defineVariable(String variableName, String value) {
-	    if(variableName.equalsIgnoreCase("null") || value.equalsIgnoreCase("null")){
-	        throw new IllegalArgumentException("value null not allowed");
-	    }
-	    if(variableMap.containsKey(variableName)){
-	        return;
-	    }
-//	    long lValue = Long.parseLong(value);
-	    variableMap.put(variableName, value);
-	    System.out.println("Defined variable:"+variableName+":"+value);
-	}
-	
-	public void resetVariable(String variableName, String/*long*/ value){
-        if(variableName.equalsIgnoreCase("null")){
+    public void defineVariable(String variableName, String value) {
+        if (variableName.equalsIgnoreCase("null")) {
             throw new IllegalArgumentException("value null not allowed");
         }
-        if(!variableMap.containsKey(variableName)){
-            throw new IllegalArgumentException("variable not found");
+        if (variableMap.containsKey(variableName)) {
+            return;
+        }
+        variableMap.put(variableName, value == "null" ? null : value);
+    }
+	
+    public void resetVariable(String variableName, String value) {
+        if (variableName.equalsIgnoreCase("null")) {
+            throw new IllegalArgumentException("value null not allowed");
         }
         variableMap.put(variableName, value);
-        System.out.println("Reset variable:"+variableName+":"+value);
     }
 	
 	public void updateVariable(String variableName, String operator, String value) {
@@ -107,12 +125,40 @@ public class SbConversation {
         }
 	    return variableMap.get(variableName);
 	}
+	
+	public Collection<String> getVariableNames(){
+	    return variableMap.keySet();
+	}
 
 	public void enqueue(String streamName, Tuple tuple) throws StreamBaseException {
-		sbd.getEnqueuer(streamName).enqueue(tuple);
+		if ( !isTestMode() ) {
+			getLiveClient().enqueue( streamName, tuple );
+			return;
+		}
+		
+		if(logger.isDebugEnabled())
+			logger.debug("enqueueing {}", tuple.toString(true));
+		getEnqueuer(streamName).enqueue(tuple);
 	}
 
 	public Schema getSchemaForStream(String streamName) throws StreamBaseException {
-		return sbd.getEnqueuer(streamName).getSchema();
+		if ( !isTestMode() )
+			return getLiveClient().getSchemaForStream( streamName );
+		
+		return getEnqueuer(streamName).getSchema();
+	}
+	
+	private Enqueuer getEnqueuer(String streamname) throws StreamBaseException {
+		SBServerManager sbd = getSbd();
+		
+		if(sbd == null)
+			throw new StreamBaseException("Embedded sbd has not been started");
+		
+		Enqueuer e = sbd.getEnqueuer(streamname);
+		
+		if(e == null)
+			throw new StreamBaseException(MessageFormat.format("Can't find stream named {0}", streamname));
+		
+		return e;
 	}
 }

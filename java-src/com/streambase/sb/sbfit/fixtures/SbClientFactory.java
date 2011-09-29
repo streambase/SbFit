@@ -7,9 +7,8 @@ package com.streambase.sb.sbfit.fixtures;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.streambase.sb.sbfit.common.SbConversation;
-
 import com.streambase.sb.StreamBaseException;
+import com.streambase.sb.sbfit.common.SbConversation;
 
 public class SbClientFactory {
 	private static final Map<String,SbConversation> connMap = new HashMap<String, SbConversation>();

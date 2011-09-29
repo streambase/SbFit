@@ -3,14 +3,11 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="com.streambase.sb.studio.jdt.clientTemplates.SBCLIENT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="con" path="com.streambase.sb.sbtest.LIBRARY_CONTAINER">
-		<accessrules>
-			<accessrule kind="accessible" pattern="**"/>
-		</accessrules>
-	</classpathentry>
 	<classpathentry kind="src" path="java-src"/>
-	<classpathentry kind="lib" path="lib/fitlibrary.jar"/>
-	<classpathentry kind="lib" path="lib/fitnesse.jar"/>
-	<classpathentry kind="var" path="STREAMBASE_HOME/lib/sbserver.jar"/>
+	<classpathentry kind="lib" path="fitlibrary.jar"/>
+	<classpathentry kind="lib" path="joda-time-1.6.jar"/>
+	<classpathentry kind="lib" path="ValueDateCalculator-1.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="fitnesse-20101101.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/sb-test-api"/>
 	<classpathentry kind="output" path="java-bin"/>
 </classpath>

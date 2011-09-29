@@ -13,7 +13,7 @@ You can combine symbols as follows:
 
 |$V and $X are symbols|
 
-The symbols V and X will be replaced with their values...
+The symbols V and X will be replaced with their values...  
 
 -----
 !4 $$ (Slim v0.2)

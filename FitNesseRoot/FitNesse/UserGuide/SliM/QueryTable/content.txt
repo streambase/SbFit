@@ -1,4 +1,4 @@
-The rows in a query table represent the expected results of a query.
+The rows in a query table represent the expected results of a query.  
 You can specify them precisely if you like as in the following:
 
 |Query:employees hired before|10-Dec-1980                     |
