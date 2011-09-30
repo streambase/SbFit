@@ -25,8 +25,6 @@ public class TouchFile extends DoFixture {
 			logger.error("No argument to TouchFile");
 			throw new IllegalArgumentException("The TouchFile fixture requires an argument that is the filename to touch");
 		}
-		
-
 
 		try {
 			File f = new File(args[0]);

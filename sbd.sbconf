@@ -4,5 +4,26 @@
   <java-vm>
     <param name="jvm-args" value="-Xmx1024m -XX:MaxPermSize=256m -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:MaxGCPauseMillis=50"/>
   </java-vm>
+
+  <data-sources>
+    <data-source name="myDB" type="jdbc">
+      <uri value="jdbc:mysql://qa-mysql5.lab.streambase.com:3306/nightly?user=nightly&amp;password=nightly&amp;noAccessToProcedureBodies=true"/>
+      <driver value="com.mysql.jdbc.Driver"/>
+      <param name="jdbc-share-connection" value="true"/>
+    </data-source>
+    <data-source name="myDB_QueryTimeout" type="jdbc">
+      <uri value="jdbc:mysql://qa-mysql5.lab.streambase.com:3306/nightly?user=nightly&amp;password=nightly&amp;noAccessToProcedureBodies=true"/>
+      <driver value="com.mysql.jdbc.Driver"/>
+      <param name="jdbc-share-connection" value="true"/>
+      <param name="jdbc-query-timeout" value="1"/>
+    </data-source>
+    <data-source name="myDB_BatchRetry" type="jdbc">
+      <uri value="jdbc:mysql://qa-mysql5.lab.streambase.com:3306/nightly?user=nightly&amp;password=nightly"/>
+      <driver value="com.mysql.jdbc.Driver"/>
+      <param name="jdbc-fetch-size" value="10"/>
+      <param name="jdbc-batch-size" value="10"/>
+      <param name="jdbc-retry-sqlstate" value="xyzzy"/>
+    </data-source>
+  </data-sources>
 </streambase-configuration>
 

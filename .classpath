@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="ValueDateCalculator-1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="fitnesse-20101101.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/sb-test-api"/>
+	<classpathentry kind="lib" path="/Users/haydens/work/7.1.3/lib/sbserver.jar"/>
 	<classpathentry kind="output" path="java-bin"/>
 </classpath>
