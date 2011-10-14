@@ -39,6 +39,14 @@ import com.streambase.sb.unittest.FieldBasedTupleComparator;
 import com.streambase.sb.unittest.SBServerManager;
 import com.streambase.sb.unittest.TupleComparator;
 import com.streambase.sb.util.Util;
+import com.streambase.sbunit.ext.ErrorReport;
+import com.streambase.sbunit.ext.ExpectTuplesFailure;
+import com.streambase.sbunit.ext.Matchers;
+import com.streambase.sbunit.ext.StreamMatcher;
+import com.streambase.sbunit.ext.StreamMatcher.ExtraTuples;
+import com.streambase.sbunit.ext.StreamMatcher.Ordering;
+import com.streambase.sbunit.ext.TupleMatcher;
+import com.streambase.sbunit.ext.matchers.FieldBasedTupleMatcher;
 
 import fit.Binding;
 import fit.Fixture;
@@ -835,6 +843,14 @@ public class SbWithFixture implements SbFixtureMixin {
     	return tuples;
     }
     
+    private static TupleMatcher makeMatcher(Tuple t, String[] fields) throws Throwable {
+    	FieldBasedTupleMatcher m = Matchers.emptyFieldMatcher();
+    	for (String f : fields) {
+    		m = m.require(f, t.getField(f));
+    	}
+    	return m;
+    }
+    
     public void unorderedDequeue(Parse rows) throws Throwable {
         int expectedRows = rows.size() - 1;
         long endTime = System.currentTimeMillis() + getTimeout(false);
@@ -850,16 +866,26 @@ public class SbWithFixture implements SbFixtureMixin {
         SchemaFieldColumnMapper mapper = new SchemaFieldColumnMapper(d.getSchema(), bindingFieldNames);
         List<String> tupleRows = getMappedCSVRowsFromTable(row, mapper);
         
-        Expecter e = new Expecter(d, comparator);
-        boolean foundError = false;
         
+        
+        List<Tuple> tuples = CSVTupleMaker.MAKER.createTuples(d.getSchema(), tupleRows);
+        
+        List<TupleMatcher> expected = new ArrayList<TupleMatcher>();
+        for (Tuple t : tuples) {
+        	expected.add(makeMatcher(t, bindingFieldNames));
+        }
+        
+        StreamMatcher m = StreamMatcher.on(d)
+    			.onExtra(ExtraTuples.IGNORE)
+    			.ordering(Ordering.UNORDERED);
+        
+        boolean foundError = false;
         try {
-			e.expectUnordered(Expecter.DequeueSetting.ALLOW_EXTRA_TUPLES, CSVTupleMaker.MAKER, tupleRows);
-		} catch (Expecter.ComparisonFailure cf) {
-			foundError = showUnorderedDequeueErrors(rows, schema, comparator, mapper, cf);
-		} catch(Expecter.ExpectedException ee) {
-			foundError = showUnorderedDequeueErrors(rows, schema, comparator, mapper, ee);			
-		}
+        	m.expectTuples(expected);
+        } catch (ExpectTuplesFailure ef) {
+        	ErrorReport report = ef.getReport();
+			foundError = showUnorderedDequeueErrors(rows, schema, report, mapper);			
+        }
         
         //
         // No error, so we'll report that everything was found
@@ -903,9 +929,8 @@ public class SbWithFixture implements SbFixtureMixin {
         }
 		return tupleRows;
 	}
-
-	private boolean showUnorderedDequeueErrors(Parse rows, Schema schema, TupleComparator comparator, SchemaFieldColumnMapper mapper,
-			Expecter.ExpectedErrorInfo eei) throws StreamBaseException {
+	
+    private boolean showUnorderedDequeueErrors(Parse rows, Schema schema, ErrorReport report, SchemaFieldColumnMapper mapper) throws Throwable {
 		Parse row;
 		boolean foundError;
 		foundError = true;
@@ -921,11 +946,13 @@ public class SbWithFixture implements SbFixtureMixin {
 
 			String mappedRow = mapper.mapCSV(csvRow);
 			Tuple t = CSVTupleMaker.MAKER.createTuple(schema, mappedRow);
-			boolean correct = false;
 			
+			TupleMatcher m = makeMatcher(t, bindingFieldNames);
+			
+			boolean correct = false;			
 			// was this tuple found?
-			for(Tuple found : eei.getFoundTuples()) {
-				if(comparator.compare(t, found)) {
+			for(Tuple found : report.getFoundTuples()) {
+				if(m.matches(found)) {
 					correct = true;
 					cell = row.parts;
 					for (int column = 0; column < bindings.length; column++, cell = cell.more) {
@@ -942,12 +969,12 @@ public class SbWithFixture implements SbFixtureMixin {
 			}
 		}
 		
-		for(Tuple t : eei.getUnexpectedTuples()) {
+		for(Tuple t : report.getUnexpectedTuples()) {
 			addUnexpectedRow(rows.last(), t);
 		}
 		return foundError;
 	}
-    
+        
 	private boolean showNotInDequeueErrors(Parse rows, Schema schema, TupleComparator comparator, SchemaFieldColumnMapper mapper,
 			List<Tuple> found, List<Tuple> unmatched) throws StreamBaseException {
 		Parse row;

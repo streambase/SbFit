@@ -9,12 +9,12 @@ This is a sbfit test suite
 
 Use my development sbunit classes
 
-!path /Users/haydens/work/svn/ruggles/sb-test-api/bin
-
 !path *.jar
 !path ${STREAMBASE_HOME}/lib/*.jar
 !path ${STREAMBASE_HOME}/lib/adapter/*.jar
 !path ${STREAMBASE_HOME}/lib/ext/*.jar
+!path /Users/haydens/work/mercurial/sbunit-ext/build/sbunit-ext.jar
+!path /Users/haydens/work/mercurial/sbunit-ext/lib/gson-1.7.1.jar
 
 !define COMMAND_PATTERN {java -Dlogback.configurationFile=sbfit-process-logback.xml -Duser.timezone=UTC -Xms1024m -Xmx1024m -cp %p %m }
 
