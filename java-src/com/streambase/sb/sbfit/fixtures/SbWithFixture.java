@@ -121,7 +121,12 @@ public class SbWithFixture implements SbFixtureMixin {
         conversation = SbClientFactory.getByAlias(alias);
         schema = conversation.getSchemaForStream(streamName);
         pivot = schema.createTuple();
-        String[] key = new String[headerCells.size()];
+
+        findTableHeaders(headerCells);
+    }
+
+	public void findTableHeaders(Parse headerCells) throws TypecheckException {
+		String[] key = new String[headerCells.size()];
         bindings = new Binding[headerCells.size()];
         bindingFieldNames = new String[headerCells.size()];
 
@@ -149,7 +154,7 @@ public class SbWithFixture implements SbFixtureMixin {
             bindings[i].adapter = new SbTypeAdapter(this, name,
                     type == SbFixtureType.Enqueue);
         }
-    }
+	}
 
     public void initBindingsWithExclusions(Parse headerCells) throws StreamBaseException {
         conversation = SbClientFactory.getByAlias(alias);

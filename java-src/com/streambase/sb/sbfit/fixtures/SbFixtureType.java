@@ -13,7 +13,12 @@ public enum SbFixtureType {
     Dequeue,
     UnorderedDequeue,
     BlockingDequeue,
+    NotInDequeue,
     DefineVariable,
     UpdateVariable,
-    BlockingDequeueVariableWithDrain
+    BlockingDequeueVariableWithDrain,
+    SqlScript,
+    SqlQuery,
+    Touch,
+    Wait,
 }

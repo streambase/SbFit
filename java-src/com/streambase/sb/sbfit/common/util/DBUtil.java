@@ -370,7 +370,7 @@ public class DBUtil {
 		return new DataSourceInfoImpl(name, uri, props, driver, 
 				-1, -1, -1, -1, -1, new ArrayList<String>(), 
 				false, true, true, 0, null, 
-				new ArrayList<String>(), new ArrayList<String>(), 5, -1, 1000, 60000000);	
+				new ArrayList<String>(), new ArrayList<String>(), 5, 5, 1000, 60000000);	
     }
 	
     private ClassLoader getClassLoader() {
