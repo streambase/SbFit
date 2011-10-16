@@ -354,9 +354,7 @@ public class DBUtil {
             return numTypecheckReconnectAttempts;
         }
 
-		@Override
 		public int getQueryTimeoutSeconds() {
-			// TODO Auto-generated method stub
 			return 0;
 		}
     }

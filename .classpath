@@ -4,19 +4,15 @@
 	<classpathentry kind="con" path="com.streambase.sb.studio.jdt.clientTemplates.SBCLIENT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="src" path="java-src"/>
-	<classpathentry kind="lib" path="fitlibrary.jar"/>
-	<classpathentry kind="lib" path="joda-time-1.6.jar"/>
 	<classpathentry kind="lib" path="ValueDateCalculator-1.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="fitnesse-20101101.jar"/>
 	<classpathentry kind="lib" path="/Users/haydens/work/7.1.3/lib/sbserver.jar"/>
-	<classpathentry kind="lib" path="/unit-testing-7.1/build/sbunit-ext-javadoc.jar"/>
-	<classpathentry kind="lib" path="/unit-testing-7.1/build/sbunit-ext-source.jar"/>
-	<classpathentry kind="lib" path="/unit-testing-7.1/build/sbunit-ext.jar"/>
-	<classpathentry kind="lib" path="/unit-testing-7.1/lib/gson-1.7.1.jar" sourcepath="/unit-testing-7.1/lib/gson-1.7.1-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/sbunit-extensions/lib/gson-1.7.1-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="con" path="com.streambase.sb.sbtest.LIBRARY_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/fitlibrary.jar"/>
+	<classpathentry kind="lib" path="lib/fitnesse-20101101.jar"/>
+	<classpathentry kind="lib" path="lib/gson-1.7.1.jar"/>
+	<classpathentry kind="lib" path="lib/joda-time-1.6.jar"/>
+	<classpathentry kind="lib" path="lib/sbunit-ext-javadoc.jar"/>
+	<classpathentry kind="lib" path="lib/sbunit-ext-source.jar"/>
+	<classpathentry kind="lib" path="lib/sbunit-ext.jar"/>
 	<classpathentry kind="output" path="java-bin"/>
 </classpath>

@@ -26,8 +26,8 @@
 	<!-- Build the FIT server -->
 	<target name='jar'>
         <mkdir dir='build'/>
-		<javac target='1.6' srcdir='java-src' destdir='build' debug='on' classpathref='class.path' />
-		<jar destfile='lib/sbfit.jar' basedir='build/' >
+		<javac target='1.6' srcdir='java-src' destdir='build' debug='on' includeAntRuntime="false" classpathref='class.path' />
+		<jar destfile='sbfit.jar' basedir='build/' >
             <include name='**/*.class'/>
         </jar>
 	</target>
