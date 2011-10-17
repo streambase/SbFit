@@ -35,6 +35,7 @@ This is a specific sbfit test
 |4|
 |5|
 
+The line below that starts with 2 should be an error (because it is in the output)
 
 !|NotInDequeue|mytest|out|
 |value|name|pi|

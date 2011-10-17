@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -13,13 +12,10 @@ import org.slf4j.LoggerFactory;
 
 import com.streambase.sb.StreamBaseException;
 import com.streambase.sb.jdbc.DataSourceInfo;
-import com.streambase.sb.operator.TypecheckException;
 import com.streambase.sb.sbfit.common.util.DBUtil;
-import com.streambase.sb.sbfit.common.util.SchemaFieldColumnMapper;
 import com.streambase.sb.util.Msg;
 import com.streambase.sb.util.Util;
 
-import fit.Binding;
 import fit.ColumnFixture;
 import fit.Parse;
 
@@ -88,7 +84,6 @@ public class SqlQuery extends ColumnFixture {
 	}
 
 	private void compareResultToTable(Parse row, ResultSet result, String [] fieldNames) throws SQLException {
-        List<String> tupleRows = new ArrayList<String>();
         boolean resultDone = false;
         
         while((row=row.more) != null) {

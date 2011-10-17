@@ -26,27 +26,21 @@ import com.streambase.sb.DataType;
 import com.streambase.sb.Schema;
 import com.streambase.sb.StreamBaseException;
 import com.streambase.sb.Tuple;
-import com.streambase.sb.TupleException;
 import com.streambase.sb.operator.TypecheckException;
 import com.streambase.sb.sbfit.common.SbConversation;
 import com.streambase.sb.sbfit.common.util.EmbeddedServerCache;
+import com.streambase.sb.sbfit.common.util.MatcherMaker;
 import com.streambase.sb.sbfit.common.util.ProcessRegistry;
-import com.streambase.sb.sbfit.common.util.SchemaFieldColumnMapper;
 import com.streambase.sb.sbfit.common.util.ValueDateUtil;
-import com.streambase.sb.unittest.CSVTupleMaker;
 import com.streambase.sb.unittest.Dequeuer;
-import com.streambase.sb.unittest.FieldBasedTupleComparator;
 import com.streambase.sb.unittest.SBServerManager;
-import com.streambase.sb.unittest.TupleComparator;
 import com.streambase.sb.util.Util;
 import com.streambase.sbunit.ext.ErrorReport;
 import com.streambase.sbunit.ext.ExpectTuplesFailure;
-import com.streambase.sbunit.ext.Matchers;
 import com.streambase.sbunit.ext.StreamMatcher;
 import com.streambase.sbunit.ext.StreamMatcher.ExtraTuples;
 import com.streambase.sbunit.ext.StreamMatcher.Ordering;
 import com.streambase.sbunit.ext.TupleMatcher;
-import com.streambase.sbunit.ext.matchers.FieldBasedTupleMatcher;
 
 import fit.Binding;
 import fit.Fixture;
@@ -787,36 +781,35 @@ public class SbWithFixture implements SbFixtureMixin {
         SBServerManager sbd = ProcessRegistry.get(alias);
         Dequeuer d = sbd.getDequeuer(streamName);
         Schema schema = d.getSchema();
-        Parse row = rows;
 
         logger.debug("about to NotInDequeue {} tuples", expectedRows);
         logger.info("unordered dequeue, header: {}", Arrays.asList(bindingFieldNames));
 
-        TupleComparator comparator = new FieldBasedTupleComparator(FieldBasedTupleComparator.DEFAULT_COMPARATOR, bindingFieldNames); 
-        SchemaFieldColumnMapper mapper = new SchemaFieldColumnMapper(d.getSchema(), bindingFieldNames);
-        List<Tuple> notExpected = getTuplesFromTable(schema, row, mapper);
+        List<TupleMatcher> matchers = MatcherMaker.makeMatchers(schema, rows, bindingFieldNames);
+        
         List<Tuple> actual = dequeueTuples(d);
         List<Tuple> found = new ArrayList<Tuple>();
         List<Tuple> unmatched = new ArrayList<Tuple>();
         
         for(Tuple t : actual) {
-        	boolean matched = false;
-        	
-        	for(Tuple not : notExpected) {
-        		if(comparator.compare(not, t)) {
-        			found.add(not);
-        			matched = true;
+        	boolean matched = false;        
+
+        	for(TupleMatcher tm : matchers) {
+        		if(tm.matches(t)) {
+        			found.add(t);
+        			matched = true;        			
         		}
         	}
         	
-        	if(!matched)
+        	if(!matched) {
         		unmatched.add(t);
+        	}
         }
         
         if(found.size() == 0) {
         	markAllCorrect(rows);
         } else {
-        	showNotInDequeueErrors(rows, schema, comparator, mapper, found, unmatched);
+        	showNotInDequeueErrors(rows, schema, found, unmatched);
         }
     }
     
@@ -842,32 +835,6 @@ public class SbWithFixture implements SbFixtureMixin {
     	return tuples;
     }
     
-    private static List<TupleMatcher> makeMatchers(Schema s, Parse row, String[] fields) throws Throwable {
-        List<TupleMatcher> matchers = new ArrayList<TupleMatcher>();
-
-        while((row=row.more) != null) {
-        	Parse cell = row.parts;
-        	matchers.add(makeMatcher(s, cell, fields));
-        }
-		return matchers;
-    }
-
-	private static FieldBasedTupleMatcher makeMatcher(Schema s, Parse cell, String[] fields) throws TupleException {
-		FieldBasedTupleMatcher m = Matchers.emptyFieldMatcher();
-
-		for (int column = 0; column < fields.length; column++, cell = cell.more) {
-			if (cell.text() == null || "null".equalsIgnoreCase(cell.text())) {
-				m = m.requireNull(fields[column]);
-			} else {
-				Tuple t = s.createTuple();
-				
-				t.setField(fields[column], cell.text());
-				m = m.require(fields[column], t.getField(fields[column]));
-			}
-		}
-		return m;
-	}
-    
     public void unorderedDequeue(Parse rows) throws Throwable {
         int expectedRows = rows.size() - 1;
         SBServerManager sbd = ProcessRegistry.get(alias);
@@ -878,7 +845,7 @@ public class SbWithFixture implements SbFixtureMixin {
         logger.info("unordered dequeue, header: {}", Arrays.asList(bindingFieldNames));
                 
         
-        List<TupleMatcher> expected = makeMatchers(schema, rows, bindingFieldNames);
+        List<TupleMatcher> expected = MatcherMaker.makeMatchers(schema, rows, bindingFieldNames);
         
         StreamMatcher m = StreamMatcher.on(d)
     			.onExtra(ExtraTuples.IGNORE)
@@ -898,42 +865,6 @@ public class SbWithFixture implements SbFixtureMixin {
 			markAllCorrect(rows);
     }
 
-    private List<Tuple> getTuplesFromTable(Schema schema, Parse row, SchemaFieldColumnMapper mapper) throws StreamBaseException {
-        List<String> tupleRows = getMappedCSVRowsFromTable(row, mapper);
-        List<Tuple> tuples = new ArrayList<Tuple>();
-        
-        for(String csv : tupleRows) {
-        	Tuple t = CSVTupleMaker.MAKER.createTuple(schema, csv);
-
-        	logger.debug("tuple: {}", t.toString(true));
-        	tuples.add(t);
-        }
-    	
-        return tuples;
-    }
-    
-    private List<String> getMappedCSVRowsFromTable(Parse row, SchemaFieldColumnMapper mapper) throws StreamBaseException {
-        List<String> tupleRows = new ArrayList<String>();
-
-        while((row=row.more) != null) {
-            Parse cell = row.parts;
-            String [] csvRow = new String[bindingFieldNames.length];
-            
-        	for (int column = 0; column < bindings.length; column++, cell = cell.more) {
-        		csvRow[column] = cell.text();
-        	}
-
-        	logger.info("csv row: {}", Arrays.asList(csvRow));
-        	
-        	String mappedRow = mapper.mapCSV(csvRow);
-        	
-        	tupleRows.add(mappedRow);
-        	
-        	logger.info("mapped csv row {}", mappedRow);
-        }
-		return tupleRows;
-	}
-	
     private boolean showUnorderedDequeueErrors(Parse rows, Schema schema, ErrorReport report) throws Throwable {
 		Parse row;
 		boolean foundError;
@@ -942,7 +873,7 @@ public class SbWithFixture implements SbFixtureMixin {
 		row = rows;
 		while((row=row.more) != null) {
 		    Parse cell = row.parts;
-			TupleMatcher m = makeMatcher(schema, cell, bindingFieldNames);
+			TupleMatcher m = MatcherMaker.makeMatcher(schema, cell, bindingFieldNames);
 			
 			boolean correct = false;			
 			// was this tuple found?
@@ -970,8 +901,7 @@ public class SbWithFixture implements SbFixtureMixin {
 		return foundError;
 	}
         
-	private boolean showNotInDequeueErrors(Parse rows, Schema schema, TupleComparator comparator, SchemaFieldColumnMapper mapper,
-			List<Tuple> found, List<Tuple> unmatched) throws StreamBaseException {
+	private boolean showNotInDequeueErrors(Parse rows, Schema schema, List<Tuple> found, List<Tuple> unmatched) throws StreamBaseException {
 		Parse row;
 		boolean foundError;
 		foundError = true;
@@ -979,19 +909,12 @@ public class SbWithFixture implements SbFixtureMixin {
 		row = rows;
 		while((row=row.more) != null) {
 		    Parse cell = row.parts;
-		    String [] csvRow = new String[bindingFieldNames.length];
-		    
-			for (int column = 0; column < bindings.length; column++, cell = cell.more) {
-				csvRow[column] = cell.text();
-			}
-
-			String mappedRow = mapper.mapCSV(csvRow);
-			Tuple t = CSVTupleMaker.MAKER.createTuple(schema, mappedRow);
+			TupleMatcher m = MatcherMaker.makeMatcher(schema, cell, bindingFieldNames);
 			boolean correct = true;
 			
 			// was this tuple found?
 			for(Tuple f : found) {
-				if(comparator.compare(t, f)) {
+				if(m.matches(f)) {
 					correct = false;
 					cell = row.parts;
 					for (int column = 0; column < bindings.length; column++, cell = cell.more) {

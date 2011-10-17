@@ -4,7 +4,6 @@
 	<classpathentry kind="con" path="com.streambase.sb.studio.jdt.clientTemplates.SBCLIENT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="src" path="java-src"/>
-	<classpathentry kind="lib" path="ValueDateCalculator-1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="/Users/haydens/work/7.1.3/lib/sbserver.jar"/>
 	<classpathentry kind="con" path="com.streambase.sb.sbtest.LIBRARY_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/fitlibrary.jar"/>
@@ -14,5 +13,6 @@
 	<classpathentry kind="lib" path="lib/sbunit-ext-javadoc.jar"/>
 	<classpathentry kind="lib" path="lib/sbunit-ext-source.jar"/>
 	<classpathentry kind="lib" path="lib/sbunit-ext.jar"/>
+	<classpathentry kind="lib" path="lib/ValueDateCalculator-1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="java-bin"/>
 </classpath>
