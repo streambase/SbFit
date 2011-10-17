@@ -854,10 +854,16 @@ public class SbWithFixture implements SbFixtureMixin {
 
 	private static FieldBasedTupleMatcher makeMatcher(Schema s, Parse cell, String[] fields) throws TupleException {
 		FieldBasedTupleMatcher m = Matchers.emptyFieldMatcher();
+
 		for (int column = 0; column < fields.length; column++, cell = cell.more) {
-			Tuple t = s.createTuple();
-			t.setField(fields[column], cell.text());
-			m = m.require(fields[column], t.getField(fields[column]));
+			if (cell.text() == null || "null".equalsIgnoreCase(cell.text())) {
+				m = m.requireNull(fields[column]);
+			} else {
+				Tuple t = s.createTuple();
+				
+				t.setField(fields[column], cell.text());
+				m = m.require(fields[column], t.getField(fields[column]));
+			}
 		}
 		return m;
 	}
