@@ -13,4 +13,7 @@ SBUNIT_EXT_JARS=${SBUNIT_EXT}/build/sbunit-ext.jar:${SBUNIT_EXT}/lib/gson-1.7.1.
 
 export CLASSPATH=$SBFIT:lib/fitnesse-20101101.jar:lib/fitlibrary.jar:$STREAMBASE_HOME/lib/sbclient.jar:$STREAMBASE_HOME/lib/junit.jar:$STREAMBASE_HOME/lib/sbtest-unit.jar:$STREAMBASE_HOME/lib/slf4j-api-1.6.1.jar:${SBUNIT_EXT_JARS}
 
+echo Running ant build to pick up any java source changes
+ant
+
 java -Dlogback.configurationFile=sbfit-main-logback.xml fitnesseMain.FitNesseMain -e 0 -p $FIT_PORT
