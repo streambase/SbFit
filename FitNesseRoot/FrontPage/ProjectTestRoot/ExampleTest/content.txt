@@ -25,11 +25,14 @@ This is a specific sbfit test
 |5|
 |6|
 
+The null below will fail, but it tests that we can use null
+
 !|UnorderedDequeue|mytest|out|
 |value|name|pi|
 |2|Irving|3.14159|
 |50|Irving|3.14159|
 |5|Irving|3.14159|
+|6|null|null|
 
 !|Enqueue|mytest|in|
 |value|
