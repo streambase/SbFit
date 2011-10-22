@@ -1,0 +1,32 @@
+!contents
+
+Test the SqlScript DB fixtures
+
+|Import|
+|com.streambase.sb.sbfit.fixtures|
+
+This should succeed
+
+!|SqlScript|myDB|
+|sql|
+|truncate table hayden|
+|insert into hayden values(1,2,5.567,'hi',null)|
+|insert into hayden values(2,3,4.567,'hi',null)|
+|insert into hayden values(3,4,5.567,'hi',null)|
+|insert into hayden values(5,6,7.890,'hi',null)|
+|insert into hayden values(6,7,8.901,'hi',null)|
+
+the insert following this will fail because it doesn't have enough columns
+
+''this test doesn't work yet so it's commented out''
+#!|SqlScript|myDB|
+#|sql|
+#|truncate table hayden|
+#|insert into hayden values(1,2,5.567,'hi')|
+
+#drop a table, ignore errors cause it's ok if the table doesn't exist
+#!|SqlScript|myDB|true|
+#|sql|
+#|drop table nosuchtable1234|
+
+

@@ -1,0 +1,58 @@
+!contents
+
+Test the SqlScript DB fixtures
+
+|Import|
+|com.streambase.sb.sbfit.fixtures|
+
+initialize table
+
+!|SqlScript|myDB|
+|sql|
+|truncate table hayden|
+|insert into hayden values(1,2,5.567,'the',null)|
+|insert into hayden values(2,3,4.567,'time',null)|
+|insert into hayden values(3,4,5.567,'is',null)|
+|insert into hayden values(5,6,7.890,'now',null)|
+|insert into hayden values(6,7,8.901,'the',null)|
+
+
+This should succeed
+
+!|SqlQuery|myDB|select * from hayden|
+|d|a|c|
+|the|1|5.567|
+|time|2|4.567|
+|is|3|5.567|
+|now|5|7.890|
+|the|6|8.901|
+
+we expected 2 more rows than were returned
+
+!|SqlQuery|myDB|select * from hayden|
+|d|a|c|
+|the|1|5.567|
+|time|2|4.567|
+|is|3|5.567|
+|now|5|7.890|
+|the|6|8.901|
+|walrus|6|8.901|
+|said|6|8.901|
+
+
+The second row has 2 wrong cells and is missing 2 lines
+
+!|SqlQuery|myDB|select * from hayden|
+|d|a|c|
+|the|1|5.567|
+|time is now|2|4.577|
+|is|3|5.567|
+
+No rows are returned, so they should all be red
+
+!|SqlQuery|myDB|select * from hayden where 1 = 0|
+|d|a|c|
+|the|1|5.567|
+|time is now|2|4.577|
+|is|3|5.567|
+
