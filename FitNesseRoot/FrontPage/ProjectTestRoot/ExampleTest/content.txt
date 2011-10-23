@@ -41,5 +41,5 @@ The null below will fail, but it tests that we can use null
 |5|
 
 !|Dequeue|mytest|withNested|
-|value|nested|
-|2|2,Irving|
+|value|nested.value|nested.name|
+|2|2|Irving|

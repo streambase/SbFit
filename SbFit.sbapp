@@ -1,9 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<modify version="7.1.3.1">
+<modify version="7.1.4.2">
     <add generator="gui">
+        <schema name="schema:complex">
+            <field description="" name="nested" type="tuple">
+                <schema>
+                    <field description="" name="i" type="int"/>
+                    <field description="" name="s" type="string"/>
+                    <field description="" name="d" type="double"/>
+                </schema>
+            </field>
+            <field description="" name="intList" type="list">
+                <element-type type="int"/>
+            </field>
+            <field description="" name="stringList" type="list">
+                <element-type type="string"/>
+            </field>
+            <field description="" name="tupleList" type="list">
+                <element-type type="tuple">
+                    <schema>
+                        <field description="" name="i" type="int"/>
+                        <field description="" name="s" type="string"/>
+                        <field description="" name="d" type="double"/>
+                    </schema>
+                </element-type>
+            </field>
+        </schema>
         <schema name="schema:in">
             <field description="" name="value" type="int"/>
         </schema>
+        <stream name="complex" schema="schema:complex">
+            <param name="gui:x" value="-444.0"/>
+            <param name="gui:y" value="144.0"/>
+            <param name="gui:width" value="62.0"/>
+            <param name="gui:height" value="62.0"/>
+        </stream>
         <stream name="in" schema="schema:in">
             <param name="gui:x" value="-444.0"/>
             <param name="gui:y" value="-81.0"/>
@@ -27,6 +57,18 @@
             <param name="gui:width" value="62.0"/>
             <param name="gui:height" value="62.0"/>
         </box>
+        <box name="noop2" type="map">
+            <input port="1" stream="complex"/>
+            <output port="1" stream="nestedOut"/>
+            <target-list>
+                <item name="input" selection="all"/>
+            </target-list>
+            <param name="gui:bends:1" value=""/>
+            <param name="gui:x" value="-328.0"/>
+            <param name="gui:y" value="144.0"/>
+            <param name="gui:width" value="62.0"/>
+            <param name="gui:height" value="62.0"/>
+        </box>
         <box name="nest" type="map">
             <input port="1" stream="out"/>
             <output port="1" stream="withNested"/>
@@ -42,6 +84,13 @@
             <param name="gui:width" value="62.0"/>
             <param name="gui:height" value="62.0"/>
         </box>
+        <output-stream name="nestedOut">
+            <param name="gui:bends" value=""/>
+            <param name="gui:x" value="-210.0"/>
+            <param name="gui:y" value="144.0"/>
+            <param name="gui:width" value="62.0"/>
+            <param name="gui:height" value="62.0"/>
+        </output-stream>
         <output-stream name="out">
             <param name="gui:bends" value=""/>
             <param name="gui:x" value="-212.0"/>

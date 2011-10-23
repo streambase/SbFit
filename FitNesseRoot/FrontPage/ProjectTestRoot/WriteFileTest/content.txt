@@ -1,0 +1,37 @@
+!contents
+
+|Import|
+|com.streambase.sb.sbfit.fixtures|
+
+!|WriteFile|written.dat|
+|data|
+|this is the first line|
+|this is the second line|
+
+!|WriteFile|written2.dat|
+|data|
+|        <schema name="schema:complex">|
+|            <field description="" name="nested" type="tuple">|
+|                <schema>|
+|                    <field description="" name="i" type="int"/>|
+|                    <field description="" name="s" type="string"/>|
+|                    <field description="" name="d" type="double"/>|
+|                </schema>|
+|            </field>|
+|            <field description="" name="intList" type="list">|
+|                <element-type type="int"/>|
+|            </field>|
+|            <field description="" name="stringList" type="list">|
+|                <element-type type="string"/>|
+|            </field>|
+|            <field description="" name="tupleList" type="list">|
+|                <element-type type="tuple">|
+|                    <schema>|
+|                        <field description="" name="i" type="int"/>|
+|                        <field description="" name="s" type="string"/>|
+|                        <field description="" name="d" type="double"/>|
+|                    </schema>|
+|                </element-type>|
+|            </field>|
+|        </schema>|
+

@@ -25,6 +25,9 @@ import fit.ColumnFixture;
 import fit.Fixture;
 import fit.Parse;
 
+/**
+ * Perform a SQL select and test the return values.
+ */
 public class SqlQuery extends ColumnFixture {
     private static final Logger logger = LoggerFactory.getLogger(SqlQuery.class);
 
