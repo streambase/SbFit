@@ -114,7 +114,7 @@ public class SqlQuery extends ColumnFixture {
         Map<String, Integer> mapping = findColumnNameMapping(result);
         Parse oldRow = row;
         
-        more = result.first();
+        more = result.next();
         
         while((row=row.more) != null) {
             Parse cell = row.parts;

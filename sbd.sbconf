@@ -9,8 +9,15 @@
     <data-source name="myDB" type="jdbc">
       <uri value="jdbc:mysql://qa-mysql5.lab.streambase.com:3306/nightly?user=nightly&amp;password=nightly&amp;noAccessToProcedureBodies=true"/>
       <driver value="com.mysql.jdbc.Driver"/>
-      <param name="jdbc-share-connection" value="true"/>
+      <param name="jdbc-share-connection" value="true"/>      
     </data-source>
+    <data-source name="sqlserver" type="jdbc">
+      <uri value="jdbc:sqlserver://mssql2005.streambase.com;databasename=qa_test_1;user=qa_test_user;password=qa_test_pass"/>
+      <driver value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+      <param name="user" value="qa_test_user"/>
+      <param name="password" value="qa_test_pass"/>
+    </data-source>
+    
     <data-source name="myDB_QueryTimeout" type="jdbc">
       <uri value="jdbc:mysql://qa-mysql5.lab.streambase.com:3306/nightly?user=nightly&amp;password=nightly&amp;noAccessToProcedureBodies=true"/>
       <driver value="com.mysql.jdbc.Driver"/>
