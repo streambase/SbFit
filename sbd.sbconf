@@ -7,25 +7,25 @@
 
   <data-sources>
     <data-source name="myDB" type="jdbc">
-      <uri value="jdbc:mysql://qa-mysql5.lab.streambase.com:3306/nightly?user=nightly&amp;password=nightly&amp;noAccessToProcedureBodies=true"/>
+      <uri value="jdbc:mysql://myhost:3306/dbname?user=username&amp;password=pass&amp;noAccessToProcedureBodies=true"/>
       <driver value="com.mysql.jdbc.Driver"/>
       <param name="jdbc-share-connection" value="true"/>      
     </data-source>
     <data-source name="sqlserver" type="jdbc">
-      <uri value="jdbc:sqlserver://mssql2005.streambase.com;databasename=qa_test_1;user=qa_test_user;password=qa_test_pass"/>
+      <uri value="jdbc:sqlserver://myhost;databasename=dbname;user=username;password=pass"/>
       <driver value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
-      <param name="user" value="qa_test_user"/>
-      <param name="password" value="qa_test_pass"/>
+      <param name="user" value="username"/>
+      <param name="password" value="pass"/>
     </data-source>
     
     <data-source name="myDB_QueryTimeout" type="jdbc">
-      <uri value="jdbc:mysql://qa-mysql5.lab.streambase.com:3306/nightly?user=nightly&amp;password=nightly&amp;noAccessToProcedureBodies=true"/>
+      <uri value="jdbc:mysql://myhost:3306/dname?user=username&amp;password=pass&amp;noAccessToProcedureBodies=true"/>
       <driver value="com.mysql.jdbc.Driver"/>
       <param name="jdbc-share-connection" value="true"/>
       <param name="jdbc-query-timeout" value="1"/>
     </data-source>
     <data-source name="myDB_BatchRetry" type="jdbc">
-      <uri value="jdbc:mysql://qa-mysql5.lab.streambase.com:3306/nightly?user=nightly&amp;password=nightly"/>
+      <uri value="jdbc:mysql://myhost:3306/nightly?user=username&amp;password=pass"/>
       <driver value="com.mysql.jdbc.Driver"/>
       <param name="jdbc-fetch-size" value="10"/>
       <param name="jdbc-batch-size" value="10"/>
