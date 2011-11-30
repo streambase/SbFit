@@ -22,6 +22,14 @@
 		<fileset dir='lib' includes='**/*.jar'/>
 		<fileset dir='${streambase.home}' includes='**/*.jar'/>		
 	</path>
+	
+	<target name="clean">
+		<delete failonerror="false" verbose="false">
+			<fileset dir="build" includes="**/*.class"/>
+			<fileset dir="java-bin" includes="**/*.class"/>
+			<fileset dir="build" includes="**/*.sbar"/>
+		</delete>
+	</target>
 
 	<!-- Build the FIT server -->
 	<target name='jar'>

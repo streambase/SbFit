@@ -131,8 +131,14 @@ public class SbWithFixture implements SbFixtureMixin {
 		String[] key = new String[headerCells.size()];
         bindings = new Binding[headerCells.size()];
         bindingFieldNames = new String[headerCells.size()];
-
+        
         for (int i = 0; headerCells != null; i++, headerCells = headerCells.more) {
+        	//
+        	// ignore headers if there are no fields in the schema
+        	//
+        	if(schema.getFieldCount() == 0)
+        		continue;
+        	        	
             String text = headerCells.text();
             String name = text;
             // boolean isKey = false;
@@ -210,7 +216,11 @@ public class SbWithFixture implements SbFixtureMixin {
     public void enqueue(Parse rows) throws Throwable {
         Parse row = rows;
         while ((row = row.more) != null) {
-            enqueueRow(row);
+        	if(schema.getFieldCount() > 0) {
+        		enqueueRow(row);
+        	} else {
+        		conversation.enqueue(streamName, schema.createTuple());
+        	}
         }
     }
 
@@ -260,7 +270,7 @@ public class SbWithFixture implements SbFixtureMixin {
 
         for (int column = 0; column < bindings.length; column++, cell = cell.more) {
 
-            // This must be a variable write because we cannot set variables in
+        	// This must be a variable write because we cannot set variables in
             // an enqueue
 
             if (cell.text().contains("&")) {
