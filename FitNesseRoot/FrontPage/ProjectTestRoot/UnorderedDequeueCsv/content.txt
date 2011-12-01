@@ -21,6 +21,8 @@ This is a specific sbfit test
 |4|
 |5|
 
+This is supposed to generate an error
+
 !|UnorderedDequeueCSV|mytest|out|
 |csvfiles/out1.csv|
 
@@ -29,16 +31,13 @@ This is a specific sbfit test
 |2|
 |4|
 |5|
-|6|
 
-The null below will fail, but it tests that we can use null
+This example uses nested fields named explicitly
 
-!|UnorderedDequeue|mytest|out|
-|value|name|pi|
-|2|Irving|3.14159|
-|50|Irving|3.14159|
-|5|Irving|3.14159|
-|6|null|null|
+!|UnorderedDequeueCSV|mytest|withNested|
+|csvfiles/out2.csv|
+
+This example uses the complete nested tuple
 
 !|Enqueue|mytest|in|
 |value|
@@ -46,6 +45,5 @@ The null below will fail, but it tests that we can use null
 |4|
 |5|
 
-!|Dequeue|mytest|withNested|
-|value|nested.value|nested.name|
-|2|2|Irving|
+!|UnorderedDequeueCSV|mytest|withNested|
+|csvfiles/out3.csv|
