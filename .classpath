@@ -13,8 +13,8 @@
 	<classpathentry kind="lib" path="lib/sbunit-ext-source.jar"/>
 	<classpathentry kind="lib" path="lib/sbunit-ext.jar"/>
 	<classpathentry kind="lib" path="lib/ValueDateCalculator-1.0-SNAPSHOT.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/compiler"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/clientapi"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/sb-test-api"/>
+	<classpathentry kind="lib" path="/Users/haydens/work/7.1.5/lib/sbserver.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/clientapi"/>
 	<classpathentry kind="output" path="java-bin"/>
 </classpath>

@@ -12,6 +12,7 @@ public enum SbFixtureType {
 	Enqueue,
     Dequeue,
     UnorderedDequeue,
+    UnorderedDequeueCSV,
     BlockingDequeue,
     NotInDequeue,
     DefineVariable,

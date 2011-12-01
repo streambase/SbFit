@@ -4,6 +4,7 @@
  */
 package com.streambase.sb.sbfit.fixtures;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -119,11 +120,14 @@ public class SbWithFixture implements SbFixtureMixin {
         this.streamName = streamName;
     }
 
-    public void initBindings(Parse headerCells) throws StreamBaseException {
+    public void initBindings() throws StreamBaseException {
         conversation = SbClientFactory.getByAlias(alias);
         schema = conversation.getSchemaForStream(streamName);
         pivot = schema.createTuple();
+    }
 
+    public void initBindings(Parse headerCells) throws StreamBaseException {
+    	initBindings();
         findTableHeaders(headerCells);
     }
 
@@ -397,6 +401,80 @@ public class SbWithFixture implements SbFixtureMixin {
         }
     }
 
+    private void addUnexpectedRowCSV(Parse priorRow, Tuple t) {
+        Parse lastRow = priorRow;
+        Parse newRow = new Parse("tr", null, null, null);
+        lastRow.more = newRow;
+        lastRow = newRow;
+
+        logger.info("unexpected tuple {}", t.toString());
+        
+        Parse cell = new Parse("td", "", null, null);
+        cell.addToBody(Fixture.gray("? = " + t.toString(true)));
+        target.ignore(cell);
+        newRow.parts = cell;
+    }
+    
+    
+    private void addExpectedRow(Parse priorRow, Tuple t) {
+        Parse lastRow = priorRow;
+        Parse newRow = new Parse("tr", null, null, null);
+        lastRow.more = newRow;
+        lastRow = newRow;
+        try {
+            Parse cell = new Parse("td", "", null, null);
+            String fieldName = bindingFieldNames[0];
+            cell.addToBody(t.getField(fieldName).toString());
+            target.ignore(cell);
+            newRow.parts = cell;
+            for (int column = 1; column < bindings.length; column++) {
+                fieldName = bindingFieldNames[column];
+                Parse current = new Parse("td", "", null, null);
+                current.addToBody(t.getField(fieldName).toString());
+                target.ignore(current);
+                cell.more = current;
+                cell = current;
+                right(current);
+            }
+        } catch (Exception e) {
+            exception(newRow, e);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void addFoundRowCSV(Parse priorRow, Tuple t, boolean correct) {
+        Parse lastRow = priorRow;
+        Parse newRow = new Parse("tr", null, null, null);
+        lastRow.more = newRow;
+        lastRow = newRow;
+
+        logger.info("found expected tuple {}", t.toString());
+        
+        Parse cell = new Parse("td", "", null, null);
+
+        cell.addToBody(t.toString(true));
+        if(correct) {
+        	right(cell);
+        } else {
+        	wrong(cell);
+        }
+        target.ignore(cell);
+        newRow.parts = cell;
+    }
+
+    private void addCorrectString(Parse priorRow, String text) {
+        Parse lastRow = priorRow;
+        Parse newRow = new Parse("tr", null, null, null);
+        lastRow.more = newRow;
+        lastRow = newRow;
+
+        Parse cell = new Parse("td", "", null, null);
+        cell.addToBody(text);
+        right(cell);
+        newRow.parts = cell;
+    }
+
     private void dequeueRow(Parse row, boolean resetVariable) throws Throwable {
         if (!SbConversation.isTestMode())
             return;
@@ -634,6 +712,13 @@ public class SbWithFixture implements SbFixtureMixin {
         }
     }
 
+    public void doDequeueArgs(String alias, String streamName) throws Exception {
+    	this.alias = alias;
+    	setStreamName(streamName);
+
+        conversation = SbClientFactory.getByAlias(alias);
+    }
+    
     public Parse doDequeueArgs(Parse rows, String[] args) throws Exception {
         if (!(2 <= args.length && args.length <= 6)) {
             throw new Exception(
@@ -646,15 +731,15 @@ public class SbWithFixture implements SbFixtureMixin {
                             + "More details can be found on the Wiki");
         }
 
-        alias = args[0];
-        conversation = SbClientFactory.getByAlias(alias);
-        setStreamName(args[1]);
+        doDequeueArgs(args[0], args[1]);
+        
         if (args.length > 2) {
             String val = args[2];
             if (!val.equals("0")) {
                 perLineTimeout = setTimeout(Long.parseLong(val));
             }
         }
+        
         if (args.length > 3) {
             String mode = args[3];
 
@@ -874,7 +959,33 @@ public class SbWithFixture implements SbFixtureMixin {
 		if(!foundError)
 			markAllCorrect(rows);
     }
+    
+    public void unorderedDequeueCSV(Parse rows, String csvFileName) throws Throwable {
+        logger.info("about to unordered dequeue from stream {} and compare to csv file {}", streamName, csvFileName);
 
+        SBServerManager sbd = ProcessRegistry.get(alias);
+        Dequeuer d = sbd.getDequeuer(streamName);
+        Schema schema = d.getSchema();
+        List<TupleMatcher> expected = MatcherMaker.makeMatchers(schema, rows, csvFileName);
+        StreamMatcher m = StreamMatcher.on(d).onExtra(ExtraTuples.IGNORE).ordering(Ordering.UNORDERED);
+        
+        boolean foundError = false;
+        try {
+        	m.expectTuples(expected);
+        } catch (ExpectTuplesFailure ef) {
+        	logger.info("found errors {}", ef.getMessage());
+        	
+        	ErrorReport report = ef.getReport();
+			foundError = showUnorderedDequeueErrorsCSV(rows, schema, report);			
+        }
+        
+        //
+        // No error, so we'll report that everything was found
+        //
+		if(!foundError)
+			addCorrectString(rows, "everything matched correctly");
+    }
+    
     private boolean showUnorderedDequeueErrors(Parse rows, Schema schema, ErrorReport report) throws Throwable {
 		Parse row;
 		boolean foundError;
@@ -909,6 +1020,26 @@ public class SbWithFixture implements SbFixtureMixin {
 			addUnexpectedRow(rows.last(), t);
 		}
 		return foundError;
+	}
+
+
+    private boolean showUnorderedDequeueErrorsCSV(Parse rows, Schema schema, ErrorReport report) throws Throwable {
+        Parse lastRow = rows;
+        Parse newRow = new Parse("tr", null, null, null);
+        lastRow.more = newRow;
+        lastRow = newRow;
+
+
+        Parse cell = new Parse("td", "", null, null);
+        String text = report.getMessage();
+        
+        text = text.replaceAll("\n", "<br/>");
+        
+        cell.addToBody(text);
+        wrong(cell);
+        newRow.parts = cell;
+        
+        return true;
 	}
         
 	private boolean showNotInDequeueErrors(Parse rows, Schema schema, List<Tuple> found, List<Tuple> unmatched) throws StreamBaseException {
@@ -947,8 +1078,6 @@ public class SbWithFixture implements SbFixtureMixin {
 		return foundError;
 	}
 
-	
-	
     private void markAllCorrect(Parse p) {
     	if(p == null)
     		return;
