@@ -16,4 +16,6 @@ export CLASSPATH=$SBFIT:lib/fitnesse-20101101.jar:lib/fitlibrary.jar:$STREAMBASE
 echo Running ant build to pick up any java source changes
 ant
 
+mkdir -p build/sbars
+
 java -Dlogback.configurationFile=sbfit-main-logback.xml fitnesseMain.FitNesseMain -e 0 -p $FIT_PORT
