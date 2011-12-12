@@ -22,5 +22,5 @@ json nested form
 |{i:2,s:'time',d:3.5}|
 
 !|Dequeue|mytest|nestedOut|
-|nested.i|nested.s|nested.d|
-|2|time|3.5|
+|nested|
+|{i:2,s:'time',d:3.5}|

@@ -32,7 +32,9 @@ import com.streambase.sb.sbfit.common.util.EmbeddedServerCache;
 import com.streambase.sb.sbfit.common.util.MatcherMaker;
 import com.streambase.sb.sbfit.common.util.ProcessRegistry;
 import com.streambase.sb.sbfit.common.util.ValueDateUtil;
+import com.streambase.sb.unittest.CSVTupleMaker;
 import com.streambase.sb.unittest.Dequeuer;
+import com.streambase.sb.unittest.JSONTupleMaker;
 import com.streambase.sb.unittest.SBServerManager;
 import com.streambase.sb.util.Util;
 import com.streambase.sbunit.ext.ErrorReport;
@@ -589,9 +591,15 @@ public class SbWithFixture implements SbFixtureMixin {
                 expectedValue = SbTypeAdapter.convertList(
                         actual.getElementType(), expected);
             } else if (actual.getDataType() == DataType.TUPLE) {
-                expectedValue = expected.equals("null") ? null
-                        : com.streambase.sb.unittest.CSVTupleMaker.MAKER
-                                .createTuple(actual.getSchema(), expected);
+            	if("null".equals(expectedValue)) {
+            		expectedValue = null;
+            	} else {
+            		try {
+            			expectedValue = CSVTupleMaker.MAKER.createTuple(actual.getSchema(), expected);
+            		} catch(Throwable t) {
+            			expectedValue = JSONTupleMaker.MAKER.createTuple(actual.getSchema(), expected);
+            		}
+            	}
             } else {
                 expectedValue = SbTypeAdapter.convert(actual.getDataType(),
                         expected);
