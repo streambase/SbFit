@@ -57,8 +57,12 @@ public final class SbTypeAdapter extends TypeAdapter {
 	@Override
 	public Object parse(String s) throws Exception {
 		Schema.Field f = schema.getField(name);
+		return convert(f, s);
+	}
+	
+	public static Object convert(Schema.Field f, String s) throws Exception {
 		try {
-			return convert(f.getCompleteDataType(), s);
+			return convertNaive(f.getCompleteDataType(), s);
 		} catch (Exception t) {
 			try {
 				return TupleJSONUtil.jsonToFieldObject(f, s);
@@ -68,7 +72,7 @@ public final class SbTypeAdapter extends TypeAdapter {
 		}
 	}
 
-	public static Object convert(CompleteDataType cdt, String s) throws StreamBaseException {
+	private static Object convertNaive(CompleteDataType cdt, String s) throws StreamBaseException {
 		Schema sch = new Schema("dummy", new Schema.Field("f", cdt));
 		Tuple t = sch.createTuple();
 		t.setField(0, s);

@@ -529,20 +529,7 @@ public class SbWithFixture implements SbFixtureMixin {
 			if ("null".equals(expectedValue)) {
 				expectedValue = null;
 			} else {
-				System.err.println(actual.toString() + " -> " + expected);
-				try {
-					expectedValue = CSVTupleMaker.MAKER.createTuple(
-							actual.getSchema(), expected);
-				} catch (Throwable t) {
-					System.err.println(t.getMessage());
-					try {
-						expectedValue = JSONTupleMaker.MAKER.createTuple(
-								actual.getSchema(), expected);
-					} catch (Throwable t2) {
-						System.err.println(t2.getMessage());
-						throw t;
-					}
-				}
+				expectedValue = SbTypeAdapter.convert(actual, expected);
 			}
 
 
