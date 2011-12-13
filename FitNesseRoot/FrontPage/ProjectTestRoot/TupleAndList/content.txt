@@ -20,7 +20,28 @@ json nested form
 !|Enqueue|mytest|complex|
 |nested|
 |{i:2,s:'time',d:3.5}|
+|{'i':3,'s':'is','d':3.5}|
 
 !|Dequeue|mytest|nestedOut|
 |nested|
 |{i:2,s:'time',d:3.5}|
+|{'i':3,'s':'is','d':3.5}|
+
+int list
+
+!|Enqueue|mytest|complex|
+|intList|
+|[1, 2, 3, 4, 5]|
+
+!|Dequeue|mytest|complex|
+|intList|
+|[1, 2, 3, 4, 5]|
+
+
+tuple list
+
+!|Enqueue|mytest|complex|
+|tupleList|
+|[{'i':3,'s':'is','d':4.5},{'i':4,'s':'now','d':5.5}]|
+
+
