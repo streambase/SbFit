@@ -402,68 +402,6 @@ public class SbWithFixture implements SbFixtureMixin {
         }
     }
 
-    private void addUnexpectedRowCSV(Parse priorRow, Tuple t) {
-        Parse lastRow = priorRow;
-        Parse newRow = new Parse("tr", null, null, null);
-        lastRow.more = newRow;
-        lastRow = newRow;
-
-        logger.info("unexpected tuple {}", t.toString());
-        
-        Parse cell = new Parse("td", "", null, null);
-        cell.addToBody(Fixture.gray("? = " + t.toString(true)));
-        target.ignore(cell);
-        newRow.parts = cell;
-    }
-    
-    
-    private void addExpectedRow(Parse priorRow, Tuple t) {
-        Parse lastRow = priorRow;
-        Parse newRow = new Parse("tr", null, null, null);
-        lastRow.more = newRow;
-        lastRow = newRow;
-        try {
-            Parse cell = new Parse("td", "", null, null);
-            String fieldName = bindingFieldNames[0];
-            cell.addToBody(t.getField(fieldName).toString());
-            target.ignore(cell);
-            newRow.parts = cell;
-            for (int column = 1; column < bindings.length; column++) {
-                fieldName = bindingFieldNames[column];
-                Parse current = new Parse("td", "", null, null);
-                current.addToBody(t.getField(fieldName).toString());
-                target.ignore(current);
-                cell.more = current;
-                cell = current;
-                right(current);
-            }
-        } catch (Exception e) {
-            exception(newRow, e);
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-    }
-    
-    private void addFoundRowCSV(Parse priorRow, Tuple t, boolean correct) {
-        Parse lastRow = priorRow;
-        Parse newRow = new Parse("tr", null, null, null);
-        lastRow.more = newRow;
-        lastRow = newRow;
-
-        logger.info("found expected tuple {}", t.toString());
-        
-        Parse cell = new Parse("td", "", null, null);
-
-        cell.addToBody(t.toString(true));
-        if(correct) {
-        	right(cell);
-        } else {
-        	wrong(cell);
-        }
-        target.ignore(cell);
-        newRow.parts = cell;
-    }
-
     private void addCorrectString(Parse priorRow, String text) {
         Parse lastRow = priorRow;
         Parse newRow = new Parse("tr", null, null, null);
@@ -485,6 +423,7 @@ public class SbWithFixture implements SbFixtureMixin {
         for (int column = 0; column < bindings.length; column++, cell = cell.more) {
             String fieldName = bindingFieldNames[column];
             Schema.Field actual = pivot.getSchema().getField(fieldName);
+
             Object actualValue = pivot.getField(actual);
             if (actualValue instanceof String)
                 actualValue = ((String) actualValue).trim();
@@ -587,23 +526,25 @@ public class SbWithFixture implements SbFixtureMixin {
             String expected = cell.text();
             Object expectedValue = null;
 
-            if (actual.getDataType() == DataType.LIST) {
-                expectedValue = SbTypeAdapter.convertList(
-                        actual.getElementType(), expected);
-            } else if (actual.getDataType() == DataType.TUPLE) {
-            	if("null".equals(expectedValue)) {
-            		expectedValue = null;
-            	} else {
-            		try {
-            			expectedValue = CSVTupleMaker.MAKER.createTuple(actual.getSchema(), expected);
-            		} catch(Throwable t) {
-            			expectedValue = JSONTupleMaker.MAKER.createTuple(actual.getSchema(), expected);
-            		}
-            	}
-            } else {
-                expectedValue = SbTypeAdapter.convert(actual.getDataType(),
-                        expected);
-            }
+			if ("null".equals(expectedValue)) {
+				expectedValue = null;
+			} else {
+				System.err.println(actual.toString() + " -> " + expected);
+				try {
+					expectedValue = CSVTupleMaker.MAKER.createTuple(
+							actual.getSchema(), expected);
+				} catch (Throwable t) {
+					System.err.println(t.getMessage());
+					try {
+						expectedValue = JSONTupleMaker.MAKER.createTuple(
+								actual.getSchema(), expected);
+					} catch (Throwable t2) {
+						System.err.println(t2.getMessage());
+						throw t;
+					}
+				}
+			}
+
 
             if (expectedValue == null || actualValue == null) {
                 if (actualValue == expectedValue) {

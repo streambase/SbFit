@@ -273,7 +273,7 @@ public class DBUtil {
 
             if (!registered) {
                 try {
-                    Class c = Class.forName(driverClass, true, getClassLoader());
+                    Class<?> c = Class.forName(driverClass, true, getClassLoader());
                     Driver d = (Driver) c.newInstance();
                     wrapperDriver = DriverFactory.makeDriver(d);
                     DriverManager.registerDriver(wrapperDriver);

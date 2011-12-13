@@ -3,7 +3,6 @@ package com.streambase.sb.sbfit.fixtures;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.text.MessageFormat;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

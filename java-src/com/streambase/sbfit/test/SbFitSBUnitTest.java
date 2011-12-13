@@ -14,11 +14,8 @@ import com.streambase.sb.unittest.CSVTupleMaker;
 import com.streambase.sb.unittest.Dequeuer;
 import com.streambase.sb.unittest.Expecter;
 import com.streambase.sb.unittest.FieldBasedTupleComparator;
-import com.streambase.sb.unittest.JSONSingleQuotesTupleMaker;
-import com.streambase.sb.unittest.ObjectArrayTupleMaker;
 import com.streambase.sb.unittest.SBServerManager;
 import com.streambase.sb.unittest.ServerManagerFactory;
-import com.streambase.sb.unittest.TupleComparator;
 
 public class SbFitSBUnitTest {
 
