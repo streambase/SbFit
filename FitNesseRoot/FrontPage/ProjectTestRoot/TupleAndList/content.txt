@@ -15,6 +15,16 @@ You can specify nested fields directly
 |nested.i|nested.s|nested.d|
 |1|the|2.5|
 
+You can specify nested fields and nulls
+
+!|Enqueue|mytest|complex|
+|nested.i|nested.s|nested.d|
+|null|null|null|
+
+!|Dequeue|mytest|nestedOut|
+|nested.i|nested.s|nested.d|
+|null|null|null|
+
 json nested form
 
 !|Enqueue|mytest|complex|

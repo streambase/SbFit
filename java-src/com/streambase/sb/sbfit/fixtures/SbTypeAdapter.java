@@ -61,6 +61,9 @@ public final class SbTypeAdapter extends TypeAdapter {
 	}
 	
 	public static Object convert(Schema.Field f, String s) throws Exception {
+		if ("null".equals(s) || s == null) {
+			return null;
+		}
 		try {
 			return convertNaive(f.getCompleteDataType(), s);
 		} catch (Exception t) {
