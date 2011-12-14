@@ -32,9 +32,7 @@ import com.streambase.sb.sbfit.common.util.EmbeddedServerCache;
 import com.streambase.sb.sbfit.common.util.MatcherMaker;
 import com.streambase.sb.sbfit.common.util.ProcessRegistry;
 import com.streambase.sb.sbfit.common.util.ValueDateUtil;
-import com.streambase.sb.unittest.CSVTupleMaker;
 import com.streambase.sb.unittest.Dequeuer;
-import com.streambase.sb.unittest.JSONTupleMaker;
 import com.streambase.sb.unittest.SBServerManager;
 import com.streambase.sb.util.Util;
 import com.streambase.sbunit.ext.ErrorReport;
@@ -524,14 +522,7 @@ public class SbWithFixture implements SbFixtureMixin {
 
             bindings[column].doCell(target, cell);
             String expected = cell.text();
-            Object expectedValue = null;
-
-			if ("null".equals(expectedValue)) {
-				expectedValue = null;
-			} else {
-				expectedValue = SbTypeAdapter.convert(actual, expected);
-			}
-
+            Object expectedValue = SbTypeAdapter.convert(actual, expected);
 
             if (expectedValue == null || actualValue == null) {
                 if (actualValue == expectedValue) {
