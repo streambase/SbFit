@@ -33,7 +33,7 @@ int list
 |intList|
 |[1, 2, 3, 4, 5]|
 
-!|Dequeue|mytest|complex|
+!|Dequeue|mytest|nestedOut|
 |intList|
 |[1, 2, 3, 4, 5]|
 
@@ -44,4 +44,8 @@ tuple list
 |tupleList|
 |[{'i':3,'s':'is','d':4.5},{'i':4,'s':'now','d':5.5}]|
 
+
+!|Dequeue|mytest|nestedOut|
+|tupleList|
+|[{'i':3,'s':'is','d':4.5},{'i':4,'s':'now','d':5.5}]|
 
