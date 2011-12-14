@@ -155,16 +155,16 @@ public class SbWithFixture implements SbFixtureMixin {
                 throw new TypecheckException("Cannot find schema column "
                         + name + " for stream " + streamName);
             }
-            bindingFieldNames[i] = name;
             logger.debug("field: {}", name);
-            
-            bindings[i] = new Binding.SetBinding(); // isEnqueue ? new
-                                                    // Binding.SetBinding() :
-                                                    // new
-                                                    // Binding.QueryBinding();
-            bindings[i].adapter = new SbTypeAdapter(this, name,
-                    type == SbFixtureType.Enqueue);
+            fillBinding(i, name);
         }
+	}
+	
+	private void fillBinding(int i, String name) {
+        bindingFieldNames[i] = name;
+        bindings[i] = new Binding.SetBinding();
+        bindings[i].adapter = new SbTypeAdapter(this, name,
+                type == SbFixtureType.Enqueue);
 	}
 
     public void initBindingsWithExclusions(Parse headerCells) throws StreamBaseException {
@@ -194,13 +194,7 @@ public class SbWithFixture implements SbFixtureMixin {
         bindingFieldNames = new String[fieldList.size()];
         for (int i = 0; i < bindings.length; i++) {
             String name = fieldList.get(i);
-            bindingFieldNames[i] = name;
-            bindings[i] = new Binding.SetBinding(); // isEnqueue ? new
-                                                    // Binding.SetBinding() :
-                                                    // new
-                                                    // Binding.QueryBinding();
-            bindings[i].adapter = new SbTypeAdapter(this, name,
-                    type == SbFixtureType.Enqueue);
+            fillBinding(i, name);
         }
     }
 
@@ -515,10 +509,7 @@ public class SbWithFixture implements SbFixtureMixin {
             }
 
             // See if it's empty - if it's defaulting
-
-            boolean isEmpty = false;
-            if (cell.text().isEmpty())
-                isEmpty = true;
+            boolean isEmpty = cell.text().isEmpty();            
 
             bindings[column].doCell(target, cell);
             String expected = cell.text();
