@@ -67,14 +67,14 @@ public class SqlQuery extends ColumnFixture {
 				Parse column = row.parts;
 
 				do {
-					logger.info("sql: {}", column.text());
+					logger.debug("sql: {}", column.text());
 					sqlCommands.add(column.text());
 				} while((column = column.more) != null);
 			}
 
 			result = executeSql(dataSource, sqlQueryText);
 			
-			logger.info("DB query returned");
+			logger.debug("DB query returned");
 
 			compareResultToTable(rows, result, rowNames);
 		} catch (Exception e) {
@@ -259,7 +259,7 @@ public class SqlQuery extends ColumnFixture {
 
 			  matched = actual.equals(exp);
 			  found = actual.toString();
-			  logger.debug(MessageFormat.format("expected timestamp: {0}, actual {1} matched {2}", exp, actual, matched));
+			  logger.debug(MessageFormat.format("expected timestamp: {0}, actual {1} matched {2}}", exp, actual, matched));
 		  }
 		  break;
 
