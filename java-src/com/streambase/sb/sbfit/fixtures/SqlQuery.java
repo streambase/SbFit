@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.streambase.sb.StreamBaseException;
+import com.streambase.sb.Timestamp;
 import com.streambase.sb.jdbc.DataSourceInfo;
 import com.streambase.sb.sbfit.common.util.DBUtil;
 import com.streambase.sb.util.Msg;
@@ -109,15 +110,17 @@ public class SqlQuery extends ColumnFixture {
         return bindingFieldNames;
 	}
 
-	private void compareResultToTable(Parse row, ResultSet result, String [] fieldNames) throws SQLException {
+	private void compareResultToTable(Parse row, ResultSet result, String [] fieldNames) throws SQLException, StreamBaseException {
         boolean more = true;
         Map<String, Integer> mapping = findColumnNameMapping(result);
         Parse oldRow = row;
+        ResultSetMetaData meta = result.getMetaData();
         
         more = result.next();
         
         while((row=row.more) != null) {
             Parse cell = row.parts;
+            int colNumber = 0;
             
             for(String columnName : fieldNames) {
         		String expected = cell.text();
@@ -126,23 +129,79 @@ public class SqlQuery extends ColumnFixture {
         		
         		logger.debug("looking for column {}", columnName);
 
+        		++colNumber;
         		if(!more) {
         			// the result set returned less rows than we were expecting
         			wrong(cell);
         		} else {
-        			if(isFloatingPoint(mapping.get(columnName))) {
-        				double actual = result.getDouble(columnName);
-        				double exp = Double.parseDouble(expected);
+        			int type = meta.getColumnType(colNumber);
+        			
+        			switch(type) {
+        			  case Types.BIT:
+        			  case Types.BOOLEAN:
+        			  	{
+        			  		boolean actual = result.getBoolean(columnName);
+        			  		boolean exp = Boolean.parseBoolean(expected);
 
-        				matched = Util.compareDoubles(exp, actual);
-        				found = Double.toString(actual);
-        				logger.debug(MessageFormat.format("expected double: {0}, actual {1} matched {2}", exp, actual, matched));
-        			} else {
-        				String actual = result.getString(columnName); 
+        			  		matched = actual == exp;
+        			  		found = Boolean.toString(actual);
+        			  		logger.debug(MessageFormat.format("expected boolean: {0}, actual {1} matched {2}", exp, actual, matched));
+        			  	}
+                        break;
 
-        				matched = actual.equals(expected);
-        				found = actual;
-        				logger.debug(MessageFormat.format("expected string: {0}, actual {1} matched {2}", expected, actual, matched));
+        			  case Types.REAL:
+        			  case Types.FLOAT:
+        			  case Types.DOUBLE:
+        			  case Types.DECIMAL:
+        			  case Types.NUMERIC:
+                        {
+                        	double actual = result.getDouble(columnName);
+                        	double exp = Double.parseDouble(expected);
+
+                        	matched = Util.compareDoubles(exp, actual);
+                        	found = Double.toString(actual);
+                        	logger.debug(MessageFormat.format("expected double: {0}, actual {1} matched {2}", exp, actual, matched));
+                        }
+        				break;
+
+        			  case Types.TINYINT:
+        			  case Types.SMALLINT:
+        			  case Types.INTEGER:
+        			  case Types.BIGINT:
+                        {
+                        	long actual = result.getLong(columnName);
+                        	long exp = Long.parseLong(expected);
+
+                        	matched = actual == exp;
+                        	found = Long.toString(actual);
+                        	logger.debug(MessageFormat.format("expected long or int: {0}, actual {1} matched {2}", exp, actual, matched));
+                        }
+                        break;
+
+                    case Types.DATE:
+                    case Types.TIME:
+                    case Types.TIMESTAMP:
+                        {
+                        	Timestamp actual = new Timestamp(result.getTimestamp(columnName));
+                        	Timestamp exp = Timestamp.fromString(expected); 
+
+                        	matched = actual.equals(exp);
+                        	found = actual.toString();
+                        	logger.debug(MessageFormat.format("expected long or int: {0}, actual {1} matched {2}", exp, actual, matched));
+                        }
+                        break;
+
+                    case Types.CHAR:
+                    case Types.VARCHAR:
+                    case Types.LONGVARCHAR:
+                    default:
+                        {
+                        	String actual = result.getString(columnName); 
+
+                        	matched = actual.equals(expected);
+                        	found = actual;
+                        	logger.debug(MessageFormat.format("expected string: {0}, actual {1} matched {2}", expected, actual, matched));
+                        }
         			}
 
         			if(matched) {
