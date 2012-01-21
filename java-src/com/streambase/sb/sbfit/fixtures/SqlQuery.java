@@ -133,89 +133,11 @@ public class SqlQuery extends ColumnFixture {
         			// the result set returned less rows than we were expecting
         			wrong(cell);
         		} else {
-        			Object obj = result.getObject(colNumber);
-        			
-                	if(obj == null) {
-                		matched = "null".equals(expected.trim());
-                		found = "null";
-                    	logger.debug(MessageFormat.format("expected null: {0}, actual {1} matched {2}", "null", expected, matched));
-                	} else {
-                		int type = meta.getColumnType(colNumber);
-
-                		switch(type) {
-                		  case Types.BIT:
-                		  case Types.BOOLEAN:
-                		  {
-                			  boolean actual = result.getBoolean(columnName);
-                			  boolean exp = Boolean.parseBoolean(expected);
-
-                			  matched = actual == exp;
-                			  found = Boolean.toString(actual);
-                			  logger.debug(MessageFormat.format("expected boolean: {0}, actual {1} matched {2}", exp, actual, matched));
-                		  }
-                		  break;
-
-                		  case Types.REAL:
-                		  case Types.FLOAT:
-                		  case Types.DOUBLE:
-                		  case Types.DECIMAL:
-                		  case Types.NUMERIC:
-                		  {
-                			  double actual = result.getDouble(columnName);
-                			  double exp = Double.parseDouble(expected);
-
-                			  matched = Util.compareDoubles(exp, actual);
-                			  found = Double.toString(actual);
-                			  logger.debug(MessageFormat.format("expected double: {0}, actual {1} matched {2}", exp, actual, matched));
-                		  }
-                		  break;
-
-                		  case Types.TINYINT:
-                		  case Types.SMALLINT:
-                		  case Types.INTEGER:
-                		  case Types.BIGINT:
-                		  {
-                			  long actual = result.getLong(columnName);
-                			  long exp = Long.parseLong(expected);
-
-                			  matched = actual == exp;
-                			  found = Long.toString(actual);
-                			  logger.debug(MessageFormat.format("expected long or int: {0}, actual {1} matched {2}", exp, actual, matched));
-                		  }
-                		  break;
-
-                		  case Types.DATE:
-                		  case Types.TIME:
-                		  case Types.TIMESTAMP:
-                		  {
-                			  java.sql.Timestamp dbVal = result.getTimestamp(columnName);
-                			  Timestamp actual = new Timestamp(result.getTimestamp(columnName));
-                			  Timestamp exp = Timestamp.fromString(expected); 
-
-                			  matched = actual.equals(exp);
-                			  found = actual.toString();
-                			  logger.debug(MessageFormat.format("expected timestamp: {0}, actual {1} matched {2}", exp, actual, matched));
-                		  }
-                		  break;
-
-                		  case Types.CHAR:
-                		  case Types.VARCHAR:
-                		  case Types.LONGVARCHAR:
-                		  default:
-                		  {
-                			  String actual = result.getString(columnName); 
-
-                			  matched = actual.equals(expected);
-                			  found = actual;
-                			  logger.debug(MessageFormat.format("expected string: {0}, actual {1} matched {2}", expected, actual, matched));
-                		  }
-                		}
-                	}
-
-        			if(matched) {
+        			// empty cell means match anything
+        			if(expected.trim().length() == 0) {
         				right(cell);
         			} else {
-        				wrong(cell, found);
+        				compareColumn(result, meta, cell, colNumber, columnName, expected);
         			}
         		}
 
@@ -231,6 +153,138 @@ public class SqlQuery extends ColumnFixture {
         if(more) {
         	addUnexpectedRows(oldRow, result, fieldNames);
         }
+	}
+	
+	/**
+	 * If the column was null, compare and mark the cell right or wrong.
+	 * 
+	 *  @return true if column was null (so the cell has already been marked).
+	 */
+	private boolean checkNull(Parse cell, ResultSet result, String expected, String found) throws SQLException {
+		boolean matched = false;
+		
+		expected = expected.trim();
+		
+		if(result.wasNull()) {	
+			matched = "null".equals(expected);			
+
+			if(matched) {
+				right(cell);
+			} else {
+				wrong(cell, "null");
+			}
+			return true;
+		} else if("null".equals(expected)) {
+			wrong(cell, found);
+			return true;
+		}
+		return false;
+	}
+	
+	private void compareColumn(ResultSet result, ResultSetMetaData meta, Parse cell, int colNumber, String columnName, String expected) throws SQLException, StreamBaseException {
+		String found;
+		boolean matched;
+		
+		int type = meta.getColumnType(colNumber);
+
+		switch(type) {
+		  case Types.BIT:
+		  case Types.BOOLEAN:
+		  {
+			  boolean actual = result.getBoolean(columnName);
+
+			  if(checkNull(cell, result, expected, Boolean.toString(actual))) {
+				  return;
+			  }
+
+			  boolean exp = Boolean.parseBoolean(expected);
+
+			  matched = actual == exp;
+			  found = Boolean.toString(actual);
+			  logger.debug(MessageFormat.format("expected boolean: {0}, actual {1} matched {2}", exp, actual, matched));
+		  }
+		  break;
+
+		  case Types.REAL:
+		  case Types.FLOAT:
+		  case Types.DOUBLE:
+		  case Types.DECIMAL:
+		  case Types.NUMERIC:
+		  {
+			  double actual = result.getDouble(columnName);
+
+			  if(checkNull(cell, result, expected, Double.toString(actual))) {
+				  return;
+			  }
+
+			  double exp = Double.parseDouble(expected);
+
+			  matched = Util.compareDoubles(exp, actual);
+			  found = Double.toString(actual);
+			  logger.debug(MessageFormat.format("expected double: {0}, actual {1} matched {2}", exp, actual, matched));
+		  }
+		  break;
+
+		  case Types.TINYINT:
+		  case Types.SMALLINT:
+		  case Types.INTEGER:
+		  case Types.BIGINT:
+		  {
+			  long actual = result.getLong(columnName);
+
+			  if(checkNull(cell, result, expected, Long.toString(actual))) {
+				  return;
+			  }
+
+			  long exp = Long.parseLong(expected);
+
+			  matched = actual == exp;
+			  found = Long.toString(actual);
+			  logger.debug(MessageFormat.format("expected long or int: {0}, actual {1} matched {2}", exp, actual, matched));
+		  }
+		  break;
+
+		  case Types.DATE:
+		  case Types.TIME:
+		  case Types.TIMESTAMP:
+		  {
+			  java.sql.Timestamp dbVal = result.getTimestamp(columnName);
+
+			  if(checkNull(cell, result, expected, dbVal == null ? "null" : dbVal.toString())) {
+				  return;
+			  }
+
+			  Timestamp actual = new Timestamp(dbVal);
+			  Timestamp exp = Timestamp.fromString(expected); 
+
+			  matched = actual.equals(exp);
+			  found = actual.toString();
+			  logger.debug(MessageFormat.format("expected timestamp: {0}, actual {1} matched {2}", exp, actual, matched));
+		  }
+		  break;
+
+		  case Types.CHAR:
+		  case Types.VARCHAR:
+		  case Types.LONGVARCHAR:
+		  default:
+		  {
+			  String actual = result.getString(columnName); 
+
+			  if(checkNull(cell, result, expected, actual)) {
+				  return;
+			  }
+
+			  matched = actual.equals(expected);
+			  found = actual;
+			  logger.debug(MessageFormat.format("expected string: {0}, actual {1} matched {2}", expected, actual, matched));
+		  }
+		}
+
+		if(matched) {
+			right(cell);
+		} else {
+			wrong(cell, found);
+		}
 	}
 	
     private void addUnexpectedRows(Parse priorRow, ResultSet result, String [] columnNames) throws SQLException {
