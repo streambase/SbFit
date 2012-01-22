@@ -8,9 +8,7 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,8 +121,6 @@ public class SqlQuery extends ColumnFixture {
             
             for(String columnName : fieldNames) {
         		String expected = cell.text();
-        		String found = null;
-        		boolean matched = false;
         		
         		logger.debug("looking for column {}", columnName);
 
@@ -322,24 +318,6 @@ public class SqlQuery extends ColumnFixture {
         }
     }
 
-	
-	private boolean isFloatingPoint(int type) {
-		return type == Types.FLOAT || type == Types.DOUBLE;
-	}
-
-	/** @return map of column name to sql type */
-	private Map<String, Integer> findColumnNameMapping(ResultSet result) throws SQLException {
-		ResultSetMetaData meta = result.getMetaData();
-		Map<String, Integer> mapping = new HashMap<String, Integer>();
-		
-		for(int i=0; i < meta.getColumnCount(); ++i) {
-			mapping.put(meta.getColumnName(i+1), meta.getColumnType(i+1));
-		}
-		
-		return mapping;
-	}
-
-	
     /**
      * 
      * @param dataSource
