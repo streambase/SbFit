@@ -3,6 +3,7 @@ package com.streambase.sb.sbfit.fixtures;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +71,12 @@ public class SqlScript extends ColumnFixture {
 				} while((column = column.more) != null);
 			}
 
-			result = executeSql(ds, ignoreErrors, (String []) sqlCommands.toArray(new String [0]));
+			try {
+				result = executeSql(ds, ignoreErrors, (String []) sqlCommands.toArray(new String [0]));
+			} catch (Throwable t) {
+				logger.error("SqlScript", t);
+				result = null;
+			}
 
 			if(result != null) {
 				row = rows;
@@ -91,7 +97,7 @@ public class SqlScript extends ColumnFixture {
 					} while((column = column.more) != null);
 				}
 			}
-		} catch (StreamBaseException e) {
+		} catch (Throwable e) {
 			logger.error("SqlScript", e);
 			exception(rows, e);
 		}
@@ -121,11 +127,14 @@ public class SqlScript extends ColumnFixture {
             for(int i=0; i < sql.length; ++i) {
             	boolean success = false;
             	Error e = null;
+        		String s = sql[i].trim();
             	
             	try {
-					success = execute(statement, sql[i].trim());
+					success = execute(statement, s);
+					logger.info("SqlScript executed {}", s);
 				} catch (Throwable ex) {
 					e = new Error(ex);
+					logger.error(MessageFormat.format("SqlScript error executing {0}", s), ex);
 				}
 				result.add(new Result(success, e));
 				
