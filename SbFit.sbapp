@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<modify version="7.1.5.2">
+<modify version="7.1.7.1">
     <add generator="gui">
         <schema name="schema:complex">
             <field description="" name="nested" type="tuple">
@@ -29,6 +29,16 @@
             <field description="" name="value" type="int"/>
         </schema>
         <schema name="schema:noFields"/>
+        <schema name="schema:sleep">
+            <field description="" name="msToSleep" type="long"/>
+        </schema>
+        <module-reference name="SubModule">
+            <param name="file" value="SubModule.sbapp"/>
+            <param name="gui:x" value="-60.0"/>
+            <param name="gui:y" value="213.0"/>
+            <param name="gui:width" value="62.0"/>
+            <param name="gui:height" value="62.0"/>
+        </module-reference>
         <stream name="complex" schema="schema:complex">
             <param name="gui:x" value="-444.0"/>
             <param name="gui:y" value="144.0"/>
@@ -44,6 +54,12 @@
         <stream name="noFields" schema="schema:noFields">
             <param name="gui:x" value="-444.0"/>
             <param name="gui:y" value="337.0"/>
+            <param name="gui:width" value="62.0"/>
+            <param name="gui:height" value="62.0"/>
+        </stream>
+        <stream name="sleep" schema="schema:sleep">
+            <param name="gui:x" value="-432.0"/>
+            <param name="gui:y" value="481.0"/>
             <param name="gui:width" value="62.0"/>
             <param name="gui:height" value="62.0"/>
         </stream>
@@ -73,6 +89,23 @@
             <param name="gui:bends:1" value=""/>
             <param name="gui:x" value="-328.0"/>
             <param name="gui:y" value="144.0"/>
+            <param name="gui:width" value="62.0"/>
+            <param name="gui:height" value="62.0"/>
+        </box>
+        <box name="shlafen" type="map">
+            <input port="1" stream="sleep"/>
+            <output port="1" stream="slept"/>
+            <param name="parallel" value="true"/>
+            <target-list>
+                <item name="input" selection="none"/>
+                <expressions>
+                    <include field="dummy">sleep(milliseconds(msToSleep+ 0))</include>
+                    <include field="flag">true</include>
+                </expressions>
+            </target-list>
+            <param name="gui:bends:1" value=""/>
+            <param name="gui:x" value="-350.0"/>
+            <param name="gui:y" value="481.0"/>
             <param name="gui:width" value="62.0"/>
             <param name="gui:height" value="62.0"/>
         </box>
@@ -127,6 +160,13 @@
             <param name="gui:width" value="62.0"/>
             <param name="gui:height" value="62.0"/>
         </output-stream>
+        <output-stream name="slept">
+            <param name="gui:bends" value=""/>
+            <param name="gui:x" value="-268.0"/>
+            <param name="gui:y" value="481.0"/>
+            <param name="gui:width" value="62.0"/>
+            <param name="gui:height" value="62.0"/>
+        </output-stream>
         <output-stream name="withNested">
             <param name="gui:bends" value=""/>
             <param name="gui:x" value="-121.0"/>
@@ -134,5 +174,13 @@
             <param name="gui:width" value="62.0"/>
             <param name="gui:height" value="62.0"/>
         </output-stream>
+        <gui.note name="Note">
+            <property name="description" value="Need to do this in another thread so the enqueue will finish immediately&#10;"/>
+            <param name="gui:x" value="-376.0"/>
+            <param name="gui:y" value="610.0"/>
+            <param name="gui:width" value="133.0"/>
+            <param name="gui:height" value="87.0"/>
+            <note-target name="shlafen"/>
+        </gui.note>
     </add>
 </modify>

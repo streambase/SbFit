@@ -1,5 +1,7 @@
 package com.streambase.sb.sbfit.fixtures;
 
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +19,7 @@ public class UnorderedDequeue extends ColumnFixture {
     public void doRows(Parse rows) {
         try {
             with.start();
+            logger.debug("args {}", Arrays.asList(args));
             rows = with.doDequeueArgs(rows, args);
             if (rows == null) {
                 return;

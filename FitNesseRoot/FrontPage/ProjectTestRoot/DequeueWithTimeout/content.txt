@@ -1,0 +1,43 @@
+!contents
+
+Use Dequeue and UnorderedDequeue fixtures with a timeout
+
+|Import|
+|com.streambase.sb.sbfit.fixtures|
+
+!|Enqueue|mytest|sleep|
+|msToSleep|
+|750|
+
+This dequeue should fail because the default timeout is 500ms per line
+
+!|Dequeue|mytest|slept|
+|flag|
+|true|
+
+!|Enqueue|mytest|sleep|
+|msToSleep|
+|750|
+
+!|Dequeue|mytest|slept|1000|
+|flag|
+|true|
+
+
+!|Enqueue|mytest|sleep|
+|msToSleep|
+|10000|
+
+This unordered dequeue should fail because the default timeout is 500ms per line
+
+!|UnorderedDequeue|mytest|slept|
+|flag|
+|true|
+
+!|Enqueue|mytest|sleep|
+|msToSleep|
+|10000|
+
+!|UnorderedDequeue|mytest|slept|12000|
+|flag|
+|true|

@@ -654,6 +654,7 @@ public class SbWithFixture implements SbFixtureMixin {
             String val = args[2];
             if (!val.equals("0")) {
                 perLineTimeout = setTimeout(Long.parseLong(val));
+            	logger.debug("perLineTimeout = {}", perLineTimeout);
             }
         }
         
@@ -861,7 +862,8 @@ public class SbWithFixture implements SbFixtureMixin {
         
         StreamMatcher m = StreamMatcher.on(d)
     			.onExtra(ExtraTuples.IGNORE)
-    			.ordering(Ordering.UNORDERED);
+    			.ordering(Ordering.UNORDERED)
+    			.timeout(perLineTimeout, TimeUnit.MILLISECONDS);
         boolean foundError = false;
         try {
         	m.expectTuples(expected);

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<application-layout>
+    <component name="noFields">
+        <param name="gui:x" value="-150.0"/>
+        <param name="gui:y" value="-31.0"/>
+        <param name="gui:width" value="62.0"/>
+        <param name="gui:height" value="62.0"/>
+    </component>
+    <component name="true">
+        <param name="gui:bends:1" value=""/>
+        <param name="gui:x" value="-34.0"/>
+        <param name="gui:y" value="-31.0"/>
+        <param name="gui:width" value="62.0"/>
+        <param name="gui:height" value="62.0"/>
+    </component>
+    <component name="noFieldsOut">
+        <param name="gui:bends" value=""/>
+        <param name="gui:x" value="89.0"/>
+        <param name="gui:y" value="-31.0"/>
+        <param name="gui:width" value="62.0"/>
+        <param name="gui:height" value="62.0"/>
+    </component>
+</application-layout>

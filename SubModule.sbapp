@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<modify version="7.1.7.1">
+    <add generator="gui">
+        <schema name="schema:noFields"/>
+        <stream name="noFields" schema="schema:noFields" scope="public">
+        </stream>
+        <box name="true" type="map">
+            <input port="1" stream="noFields"/>
+            <output port="1" stream="noFieldsOut"/>
+            <target-list>
+                <item name="input" selection="all"/>
+                <expressions>
+                    <include field="b">true</include>
+                </expressions>
+            </target-list>
+        </box>
+        <output-stream name="noFieldsOut" scope="public">
+        </output-stream>
+    </add>
+</modify>

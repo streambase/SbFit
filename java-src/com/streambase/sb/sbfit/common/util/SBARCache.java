@@ -64,7 +64,14 @@ public class SBARCache {
 			
 			commands.add(SBARGEN_COMMAND);
 			commands.add("--if-modified");
-
+			
+/*
+			//
+			// generate debuggable sbar
+			//
+			commands.add("-Dstreambase.appgen.debug=true");
+			commands.add("-Dstreambase.codegen.compile-debug=-g:vars,lines");
+*/
 			for(Map.Entry<String, String> param : params.entrySet()) {
 				commands.add(MessageFormat.format("-P{0}={1}", param.getKey(), param.getValue()));
 			}

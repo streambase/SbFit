@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PushbackReader;
 import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -47,7 +48,12 @@ public class CSVTupleReader
         _reader = new PushbackReader(reader, 1);
         _delimiter = delimiter;
     }
-
+    
+    /** Shortcut to read csv from a string */
+    public CSVTupleReader(String csvText, char delimiter, char quoteChar) {
+    	this(new StringReader(csvText), delimiter, quoteChar);
+    }
+    
     /**
      * Construct an RFC4180 CSV reader with the default comma
      * delimiter and double quote quote character.
@@ -55,6 +61,12 @@ public class CSVTupleReader
     public CSVTupleReader(Reader reader)
     {
         this(reader, ',', '"');
+    }
+    
+    public static String [] parseCSV(String csvText, char delimiter, char quoteChar) throws RFC4180FormatException, IOException {
+    	CSVTupleReader reader = new CSVTupleReader(csvText, delimiter, quoteChar);
+    	    	
+    	return reader.readRecord();
     }
 
     /**
