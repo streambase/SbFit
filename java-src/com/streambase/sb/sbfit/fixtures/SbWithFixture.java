@@ -710,7 +710,7 @@ public class SbWithFixture implements SbFixtureMixin {
         SBServerManager sbd = ProcessRegistry.get(alias);
         Dequeuer d = sbd.getDequeuer(streamName);
         Parse row = rows;
-
+        
         logger.debug("about to dequeue {} tuples", expectedRows);
         try {
             SbFixtureReporter.reporter.start(SbFixtureType.Dequeue + " - main");

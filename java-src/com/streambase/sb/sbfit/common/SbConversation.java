@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.streambase.sb.Schema;
 import com.streambase.sb.StreamBaseException;
 import com.streambase.sb.Tuple;
+import com.streambase.sb.client.StreamBaseAdminClient;
 import com.streambase.sb.client.StreamBaseClient;
 import com.streambase.sb.sbfit.common.util.ProcessRegistry;
 import com.streambase.sb.sbfit.fixtures.Dequeue;
@@ -50,6 +51,10 @@ public class SbConversation {
 		}
 		
 		return null;
+	}
+	
+	public StreamBaseAdminClient getAdminClient() throws StreamBaseException {
+		return new StreamBaseAdminClient(getSbd().getURI());
 	}
 	
 	public static boolean isTestMode() throws StreamBaseException {

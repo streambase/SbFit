@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<modify version="7.1.7.1">
+<modify version="7.1.8.2">
     <add generator="gui">
         <schema name="schema:complex">
             <field description="" name="nested" type="tuple">
@@ -25,6 +25,7 @@
                 </element-type>
             </field>
         </schema>
+        <schema name="schema:getLeadership"/>
         <schema name="schema:in">
             <field description="" name="value" type="int"/>
         </schema>
@@ -42,6 +43,12 @@
         <stream name="complex" schema="schema:complex">
             <param name="gui:x" value="-444.0"/>
             <param name="gui:y" value="144.0"/>
+            <param name="gui:width" value="62.0"/>
+            <param name="gui:height" value="62.0"/>
+        </stream>
+        <stream name="getLeadership" schema="schema:getLeadership">
+            <param name="gui:x" value="-31.0"/>
+            <param name="gui:y" value="360.0"/>
             <param name="gui:width" value="62.0"/>
             <param name="gui:height" value="62.0"/>
         </stream>
@@ -63,6 +70,21 @@
             <param name="gui:width" value="62.0"/>
             <param name="gui:height" value="62.0"/>
         </stream>
+        <box name="isLeader" type="map">
+            <input port="1" stream="getLeadership"/>
+            <output port="1" stream="leadership"/>
+            <target-list>
+                <item name="input" selection="all"/>
+                <expressions>
+                    <include field="leadership">getLeadershipStatus()</include>
+                </expressions>
+            </target-list>
+            <param name="gui:bends:1" value=""/>
+            <param name="gui:x" value="96.0"/>
+            <param name="gui:y" value="360.0"/>
+            <param name="gui:width" value="62.0"/>
+            <param name="gui:height" value="62.0"/>
+        </box>
         <box name="noop" type="map">
             <input port="1" stream="in"/>
             <output port="1" stream="out"/>
@@ -124,6 +146,13 @@
             <param name="gui:width" value="62.0"/>
             <param name="gui:height" value="62.0"/>
         </box>
+        <output-stream name="leadership">
+            <param name="gui:bends" value=""/>
+            <param name="gui:x" value="207.0"/>
+            <param name="gui:y" value="360.0"/>
+            <param name="gui:width" value="62.0"/>
+            <param name="gui:height" value="62.0"/>
+        </output-stream>
         <box name="nest" type="map">
             <input port="1" stream="out"/>
             <output port="1" stream="withNested"/>
