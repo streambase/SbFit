@@ -1,6 +1,12 @@
 <project name='sbfit' default='jar' basedir='.'>
-
-	<exec executable="sb-config">
+	<property environment="env"/>
+	<property name="streambase.home" value="${env.STREAMBASE_HOME}"/>
+	
+	<condition property="streambasehome.set">
+		<length string="${streambase.home}" when="greater" length="0" />
+	</condition>
+	
+	<exec os="unix,mac" executable="sb-config">
 		<arg value="--env"/>
 		<redirector outputproperty="streambase.home">
 			<outputfilterchain>
