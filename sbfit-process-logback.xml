@@ -1,28 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration>
-
-
   <appender name="RootFileAppender" class="ch.qos.logback.core.FileAppender">
     <file>sbfit-log.log</file>
     <append>false</append>
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
       <level>debug</level>
     </filter>
-
-          <layout class="ch.qos.logback.classic.PatternLayout">
-        <pattern>%d{yyyy-MM-dd HH:mm:ss}, %p, %c, %L, %C{1}, %M %m%n</pattern>
-      </layout>
-          </appender>
-
-
-
-
-
-
-
-<root><level value="info"/>
-    <appender-ref ref="RootFileAppender"/>
-    </root>
-
+    <encoder>
+       <pattern>%d{yyyy-MM-dd HH:mm:ss}, %p, %c, %L, %C{1}, %M %m%n</pattern>
+    </encoder>
+   </appender>
+   <root>
+     <level value="info"/>
+     <appender-ref ref="RootFileAppender"/>
+   </root>
 </configuration>
