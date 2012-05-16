@@ -16,7 +16,7 @@ if [ `uname` == "CYGWIN_NT-5.1" ]
   export STREAMBASE_HOME=`cygpath -ws "$STREAMBASE_HOME"`
 fi
 
-export CLASSPATH=$SBFIT:lib/fitnesse-20101101.jar:lib/fitlibrary.jar:$STREAMBASE_HOME/lib/sbclient.jar:$STREAMBASE_HOME/lib/junit.jar:$STREAMBASE_HOME/lib/sbtest-unit.jar:$STREAMBASE_HOME/lib/slf4j-api-1.6.1.jar:${SBUNIT_EXT_JARS}
+export CLASSPATH=$SBFIT:lib/fitnesse-20101101.jar:lib/fitlibrary.jar:$STREAMBASE_HOME/lib/sbclient.jar:$STREAMBASE_HOME/lib/junit.jar:$STREAMBASE_HOME/lib/sbtest-unit.jar:${SBUNIT_EXT_JARS}
 
 if [ `uname` == "CYGWIN_NT-5.1" ]
  then
