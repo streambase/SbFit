@@ -1,21 +1,21 @@
 !contents -R2 -g -p -f -h
 
-This is a sbfit test suite
+This is an SbFit test suite
 
 |Import|
 |com.streambase.sb.sbfit.fixtures|
 
 !path java-bin
-
-Use my development sbunit classes
-
 !path sbfit.jar
 !path lib/*.jar
-!path ${STREAMBASE_HOME}/lib/*.jar
+
+!path ${STREAMBASE_HOME}/lib/sbclient.jar
+!path ${STREAMBASE_HOME}/lib/sbserver.jar
+!path ${STREAMBASE_HOME}/lib/junit.jar
+!path ${STREAMBASE_HOME}/lib/sbtest.jar
+!path ${STREAMBASE_HOME}/lib/sbtest-unit.jar
 !path ${STREAMBASE_HOME}/lib/adapter/*.jar
 !path ${STREAMBASE_HOME}/lib/ext/*.jar
-#!path /Users/haydens/work/mercurial/sbunit-ext/build/sbunit-ext.jar
-#!path /Users/haydens/work/mercurial/sbunit-ext/lib/gson-1.7.1.jar
 
 !define COMMAND_PATTERN {java -Dlogback.configurationFile=sbfit-process-logback.xml -Duser.timezone=UTC -Xms1024m -Xmx1024m -cp %p %m }
 !define DEBUG_COMMAND_PATTERN {java -Xdebug -agentlib:jdwp=transport=dt_socket,address=0.0.0.0:8000,server=y,suspend=y -Dstreambase.appgen.debug=true -Dstreambase.codegen.compile-debug=-g:vars,lines -Dlogback.configurationFile=sbfit-process-logback.xml -Duser.timezone=UTC -Xms1024m -Xmx1024m -cp %p %m }
