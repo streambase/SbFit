@@ -357,6 +357,12 @@ public class DBUtil {
 		public int getQueryTimeoutSeconds() {
 			return 0;
 		}
+
+		@Override
+		public List<Connection> getOpenConnections() {
+			// TODO Auto-generated method stub
+			return null;
+		}
     }
 
     public DBUtil() {

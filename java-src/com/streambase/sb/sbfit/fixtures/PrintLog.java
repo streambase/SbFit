@@ -27,9 +27,8 @@ public class PrintLog extends TableFixture {
 			br = useOutFile ? LogOutputCapture.getCapturer().getOutReader(startFromBegining,readerName)
 					: LogOutputCapture.getCapturer().getErrReader(startFromBegining,readerName);
 
-			String line; int i = 0;
+			String line;
 			while ((line = br.readLine()) != null) {
-				i++;
 				addRow(getCell(0,0).last(),line);
 			}
 		} catch (FileNotFoundException e) {
