@@ -353,7 +353,7 @@ public class SqlQuery extends ColumnFixture {
 
     /**
      * Execute a command if it is non-empty. If an exception occurs, wrap it in
-     * a streambase exception that includes the command.
+     * a StreamBaseException that includes the command.
      * @throws StreamBaseException If anything goes wrong.
      */
 	private ResultSet execute(Statement statement, String command) throws StreamBaseException {
