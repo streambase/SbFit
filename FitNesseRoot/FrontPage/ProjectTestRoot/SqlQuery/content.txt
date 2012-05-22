@@ -1,6 +1,6 @@
 !contents
 
-Test the SqlScript DB fixtures
+Test the SqlQuery DB fixture
 
 |Import|
 |com.streambase.sb.sbfit.fixtures|

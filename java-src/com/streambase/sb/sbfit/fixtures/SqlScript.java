@@ -76,6 +76,9 @@ public class SqlScript extends ColumnFixture {
 			} catch (Throwable t) {
 				logger.error("SqlScript", t);
 				result = null;
+				logger.error("calling exception t");
+				exception(rows.parts, t);
+				return;
 			}
 
 			if(result != null) {

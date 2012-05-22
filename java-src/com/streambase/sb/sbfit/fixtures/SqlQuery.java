@@ -77,7 +77,7 @@ public class SqlQuery extends ColumnFixture {
 			compareResultToTable(rows, result, rowNames);
 		} catch (Exception e) {
 			logger.error("SqlQuery exception", e);
-			exception(rows, e);
+			exception(rows.parts, e);
 		}
 		finally {
 			if(statement != null) {
