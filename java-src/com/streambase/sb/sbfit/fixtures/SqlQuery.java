@@ -351,7 +351,7 @@ public class SqlQuery extends ColumnFixture {
         }
     }
 
-    /**
+    /*
      * Execute a command if it is non-empty. If an exception occurs, wrap it in
      * a StreamBaseException that includes the command.
      * @throws StreamBaseException If anything goes wrong.
