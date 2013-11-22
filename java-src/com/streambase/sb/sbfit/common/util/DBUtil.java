@@ -169,7 +169,7 @@ public class DBUtil {
             }
         }
 
-        private boolean isValid(Connection conn) {
+        public boolean isValid(Connection conn) {
             if(conn == null) {
                 return false;
             }
