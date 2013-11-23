@@ -142,7 +142,7 @@ public class SbConversation {
 		}
 		
 		if(logger.isDebugEnabled())
-			logger.debug("enqueueing {}", tuple.toString(true));
+			logger.debug("enqueueing {} to stream {}", tuple.toString(true), streamName);
 		getEnqueuer(streamName).enqueue(tuple);
 	}
 
