@@ -27,7 +27,7 @@ This should succeed
 |now|5|7.890|
 |the|6|8.901|
 
-we expected 2 more rows than were returned
+We expected 2 more rows than were returned
 
 !|SqlQuery|myDB|select * from hayden|
 |d|a|c|
@@ -40,7 +40,7 @@ we expected 2 more rows than were returned
 |said|6|8.901|
 
 
-The second row has 2 wrong cells and is missing 2 lines
+The second row has 2 wrong cells and 2 fewer rows were expected than were returned
 
 !|SqlQuery|myDB|select * from hayden|
 |d|a|c|

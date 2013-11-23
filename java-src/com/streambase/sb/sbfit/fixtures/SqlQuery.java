@@ -112,19 +112,25 @@ public class SqlQuery extends ColumnFixture {
         boolean more = true;
         Parse oldRow = row;
         ResultSetMetaData meta = result.getMetaData();
+
+        if (logger.isDebugEnabled()) {
+        	for (int col = 1; col <= meta.getColumnCount(); col++) {
+        		int type = meta.getColumnType(col);
+        		String name = meta.getColumnName(col);
+        		logger.debug("column " + col + ": name='"+name+ ", type="+ type);
+        	}
+        }
         
         more = result.next();
         
         while((row=row.more) != null) {
             Parse cell = row.parts;
-            int colNumber = 0;
             
             for(String columnName : fieldNames) {
         		String expected = cell.text();
         		
         		logger.debug("looking for column {}", columnName);
 
-        		++colNumber;
         		if(!more) {
         			// the result set returned less rows than we were expecting
         			wrong(cell);
@@ -133,7 +139,7 @@ public class SqlQuery extends ColumnFixture {
         			if(expected.trim().length() == 0) {
         				right(cell);
         			} else {
-        				compareColumn(result, meta, cell, colNumber, columnName, expected);
+        				compareColumn(result, meta, cell, columnName, expected);
         			}
         		}
 
@@ -177,11 +183,23 @@ public class SqlQuery extends ColumnFixture {
 		return false;
 	}
 	
-	private void compareColumn(ResultSet result, ResultSetMetaData meta, Parse cell, int colNumber, String columnName, String expected) throws SQLException, StreamBaseException {
+	private void compareColumn(ResultSet result, ResultSetMetaData meta, Parse cell, String columnName, String expected) throws SQLException, StreamBaseException {
 		String found;
 		boolean matched;
 		
-		int type = meta.getColumnType(colNumber);
+		boolean foundColumn = false;
+		int resultColumnNumber = 0;
+		for (int c = 1; c <= meta.getColumnCount(); c++) {
+			if (columnName.equalsIgnoreCase(meta.getColumnName(c))) {
+				foundColumn = true;
+				resultColumnNumber = c;
+				break;
+			}
+		}
+		if (!foundColumn) {
+			throw new StreamBaseException("Could not find column '" + columnName + " in result set");
+		}
+		int type = meta.getColumnType(resultColumnNumber);
 
 		switch(type) {
 		  case Types.BIT:
